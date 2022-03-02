@@ -160,10 +160,6 @@ public:
         // Do nothing
     }
 public:
-    bool length() const {
-        return _num.size();
-    }
-
     bool isNegative() const {
         return _negative;
     }
@@ -182,8 +178,9 @@ public:
         }
 
         // 2 số có độ dài khác nhau => tùy vào dấu mà đưa ra số nhỏ hơn.
-        if (length() != num.length()) {
-            return (isNegative()) ? (length() > num.length()) : (length() < num.length());
+        if (_num.length() != num._num.length()) {
+            return (isNegative()) ? (_num.length() > num._num.length())
+                                  : (_num.length() < num._num.length());
         }
 
         return isNegative() ? (_num > num._num) : (_num < num._num);
@@ -235,13 +232,6 @@ public:
 
     BigInt operator+(const BigInt& num) const {
         // Xét dấu phép cộng.
-        if (!isNegative() && num.isNegative()) {
-            return *this - num;
-        }
-        else if (!num.isNegative() && isNegative()) {
-            return num - *this;
-        }
-
         std::stringstream ss;
 
         std::string firstNum = _num;
@@ -260,14 +250,8 @@ public:
         for (int i = (int)firstNum.length() - 1; i >= 0; --i) {
             int currentSum = _charIntToInt(firstNum[i]) + _charIntToInt(secondNum[i]) + carry;
 
-            if (currentSum >= 10) {
-                ss << currentSum % 10;
-                carry = currentSum / 10;
-            }
-            else {
-                ss << currentSum;
-                carry = 0;
-            }
+            ss << currentSum % 10;
+            carry = currentSum / 10;
         }
 
         if (carry > 0) {
@@ -277,7 +261,7 @@ public:
             }
         }
 
-        return BigInt(_reverse(ss.str()), isNegative());
+        return BigInt(_reverse(ss.str()));
     }
 
     void operator+=(const BigInt& num) {
@@ -288,18 +272,8 @@ public:
     BigInt operator-(const BigInt& num) const {
         std::stringstream ss;
 
-        if (isNegative() != num.isNegative()) {
-            return (*this > num) ? *this + BigInt(num._num, !num.isNegative()) 
-                                 : BigInt(_num, !isNegative()) + num;
-        }
-
         std::string firstNum = _num;
         std::string secondNum = num._num;
-        
-        // 4 - 6 => am (4 < 6)
-        // (-4) - (-6) => duong (-4 > -6)
-        // (-4) - 6 => am (-4 < 6)
-        // 4 - (-6) => duong (4 > -6)
 
         // Thêm số 0 vào trước để 2 string bằng nhau => tránh index out of bound.
         if ((int)_num.length() > (int)secondNum.length()) {
@@ -308,20 +282,11 @@ public:
         else if ((int)_num.length() < (int)secondNum.length()) {
             _addLeadingZeros(firstNum, (int)(secondNum.length() - firstNum.length()));
         }
-
-        // std::cout << (*this < num) << std::endl;
-        // std::cout << *this << " " << num << std::endl;
         
         // Swap order if firstNum < secondNum
-        std::cout << "F" << length() << " " << num.length() << std::endl;  
         if (*this < num) {
-            std::cout << "swap" << std::endl;
             std::swap(firstNum, secondNum);
         }
-
-        // 05
-        // 11
-        // 94
 
         // Reverse both of strings
         firstNum = _reverse(firstNum);
@@ -341,7 +306,7 @@ public:
             ss << sub;
         }
 
-        return BigInt(_reverse(ss.str()), max(*this, num).isNegative());
+        return BigInt(_reverse(ss.str()));
     }
 
     void operator-=(const BigInt& num) {
@@ -349,12 +314,35 @@ public:
     }
 
     BigInt operator*(const BigInt& num) const {
-        // Goes brrr
         std::stringstream ss;
 
-        
+        std::string firstNum = _num;
+        std::string secondNum = num._num;
 
-        return BigInt(ss.str());
+        BigInt result;
+
+        int carry = 0;
+        for (int i = secondNum.length() - 1; i >= 0; --i) {
+            if (secondNum[i] == '0') continue;
+            for (int j = firstNum.length() - 1; j >= 0; --j) {
+                int current_prod = _charIntToInt(firstNum[j]) * _charIntToInt(secondNum[i]) + carry;
+
+                ss << current_prod % 10;
+                carry = current_prod / 10;
+            }
+
+            while (carry > 0) {
+                ss << carry % 10;
+                carry /= 10;
+            }
+
+            std::string lineResult = _reverse(ss.str());
+            _addTrailingZeros(lineResult, secondNum.length() - i - 1);
+
+            result += BigInt(lineResult); ss.str("");
+        }
+
+        return result;
     }
 
     void operator*=(const BigInt& num) {
@@ -374,20 +362,7 @@ public:
             return zero;
         }
 
-        BigInt firstNumber = *this;
-
-        // Naive
-        if (firstNumber.isNegative()) {
-            while (firstNumber.isNegative()) {
-                firstNumber += base;
-            }
-        }
-        else {
-            while (firstNumber >= base) {
-                firstNumber -= base;
-            }
-        }
-        return firstNumber;
+        // Modulo operator goes here
     }
 
     void operator%=(const BigInt& num) {
@@ -422,26 +397,25 @@ public:
 
 int main() {
     try {
-        // BigInt m; std::cout << "m = "; std::cin >> m;
+        BigInt m; std::cout << "m = "; std::cin >> m;
         BigInt a; std::cout << "a = "; std::cin >> a;
         BigInt b; std::cout << "b = "; std::cin >> b;
 
-        std::cout << "a = " << a << " " << a.length() << std::endl;
-        std::cout << "b = " << b << " " << b.length() << std::endl;
+        /*if (a > b) std::cout << "a > b" << std::endl;
+        if (a < b) std::cout << "a < b" << std::endl;
+        if (a == b) std::cout << "a == b" << std::endl;
+        if (a <= b) std::cout << "a <= b" << std::endl;
+        if (a >= b) std::cout << "a >= b" << std::endl;*/
 
-        // if (a > b) std::cout << "a > b" << std::endl;
-        // if (a < b) std::cout << "a < b" << std::endl;
-        // if (a == b) std::cout << "a == b" << std::endl;
-        // if (a <= b) std::cout << "a <= b" << std::endl;
-        // if (a >= b) std::cout << "a >= b" << std::endl;
-
+        std::cout << "a + b = " << a + b << std::endl;
+        std::cout << "a * b = " << a * b << std::endl;
         std::cout << "a - b = " << a - b << std::endl;
 
-        // std::cout << "a % m = " << a % m << std::endl;
-        // std::cout << "b % m = " << b % m << std::endl;
+        //std::cout << "a % m = " << a % m << std::endl;
+        //std::cout << "b % m = " << b % m << std::endl;
 
-        // std::cout << "(a + b) % m = " << BigInt::modularAddition(a, b, m) << '\n';
-        // std::cout << "(a * b) % m = " << BigInt::modularMultiplication(a, b, m) << '\n';
+        /*std::cout << "(a + b) % m = " << BigInt::modularAddition(a, b, m) << '\n';
+        std::cout << "(a * b) % m = " << BigInt::modularMultiplication(a, b, m) << '\n';*/
     }
     catch (const std::exception& e) {
         std::cout << e.what() << '\n';
