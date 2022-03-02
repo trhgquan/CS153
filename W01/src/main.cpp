@@ -1,3 +1,4 @@
+#include<cassert>
 #include<iostream>
 #include<string>
 #include<sstream>
@@ -37,7 +38,7 @@ private:
         std::stringstream ss;
         bool valid = false;
     
-        for (int i = 0; i < num.size(); ++i) {
+        for (int i = 0; i < (int)num.length(); ++i) {
             if (num[i] == '0' && !valid) {
                 continue;
             }
@@ -96,7 +97,7 @@ private:
      * @return false otherwise
      */
     bool _validate(const std::string& num) {
-        for (int i = 0; i < num.length(); ++i) {
+        for (int i = 0; i < (int)num.length(); ++i) {
             if (i == 0 && num[i] == '-') continue;
             else if (num[i] >= '0' && num[i] <= '9') continue;
             else return false;
@@ -165,7 +166,7 @@ public:
     }
 public:
     char& operator[](const int index) {
-        if (index < 0 || index > _num.length()) {
+        if (index < 0 || index > (int)_num.length()) {
             throw std::runtime_error("Index out of bound");
         }
         return _num[index];
@@ -264,9 +265,17 @@ public:
         return BigInt(_reverse(ss.str()));
     }
 
+    BigInt operator+(const std::string& num) const {
+        return *this + BigInt(num);
+    }
+
     void operator+=(const BigInt& num) {
         // Goes brrr
         *this = *this + num;
+    }
+
+    void operator+=(const std::string& num) {
+        *this += BigInt(num);
     }
 
     BigInt operator-(const BigInt& num) const {
@@ -309,8 +318,16 @@ public:
         return BigInt(_reverse(ss.str()));
     }
 
+    BigInt operator-(const std::string& num) const {
+        return *this - BigInt(num);
+    }
+ 
     void operator-=(const BigInt& num) {
         *this = *this - num;
+    }
+
+    void operator-=(const std::string& num) {
+        *this -= BigInt(num);
     }
 
     BigInt operator*(const BigInt& num) const {
@@ -345,24 +362,61 @@ public:
         return result;
     }
 
+    BigInt operator*(const std::string& num) const {
+        return *this * BigInt(num);
+    }
+
     void operator*=(const BigInt& num) {
         // Goes brrr
         *this = *this * num;
     }
 
+    void operator*=(const std::string& num) {
+        *this *= BigInt(num);
+    }
+
     BigInt operator%(const BigInt& base) const {
         // Goes brrr
         if (base == "0") {
-            throw std::runtime_error("Zero division error");
+            throw std::runtime_error("Zero division encountered");
         }
 
-        BigInt zero("0");
+        BigInt zero("0"), one("1"), ten("10");
 
         if (base == "1" || base == *this) {
             return zero;
         }
 
+        if (base == "2") {
+            int lastDigit = _charIntToInt(*prev(_num.end()));
+            return !(lastDigit & 1) ? zero : one;
+        }
+
+        if (*this < base) {
+            return *this;
+        }
+
         // Modulo operator goes here
+        BigInt currentNum = *this;
+
+        while (currentNum > base) {
+            BigInt currentBase = base;
+            
+            while (1) {
+                BigInt tempBase = currentBase * ten;
+                if (currentNum < tempBase) break;
+
+                currentBase = tempBase;
+            }
+            
+            currentNum -= currentBase;
+        };
+
+        return currentNum;
+    }
+
+    BigInt operator%(const std::string& base) const {
+        return *this % BigInt(base);
     }
 
     void operator%=(const BigInt& num) {
@@ -374,10 +428,18 @@ public:
         return (a > b) ? a : b;
     }
     static BigInt modularAddition(const BigInt& a, const BigInt& b, const BigInt& m) {
-        return ((a % m) + (b % m)) % m;
+        BigInt zero("0");
+        assert(m > zero);
+        BigInt first = (a >= zero) ? a : (m - a);
+        BigInt second = (b >= zero) ? b : (m - b);
+        return ((first % m) + (second % m)) % m;
     }
     static BigInt modularMultiplication(const BigInt& a, const BigInt& b, const BigInt& m) {
-        return ((a % m) * (b % m)) % m;
+        BigInt zero("0");
+        assert(m > zero);
+        BigInt first = (a >= zero) ? a : m - a;
+        BigInt second = (b >= zero) ? b : m - b;
+        return ((first % m) * (second % m)) % m;
     }
 public:
     friend std::istream& operator>>(std::istream& in, BigInt& num) {
@@ -397,25 +459,12 @@ public:
 
 int main() {
     try {
-        BigInt m; std::cout << "m = "; std::cin >> m;
-        BigInt a; std::cout << "a = "; std::cin >> a;
-        BigInt b; std::cout << "b = "; std::cin >> b;
+        BigInt m; std::cout << "Moi thay nhap m = "; std::cin >> m;
+        BigInt a; std::cout << "Moi thay nhap a = "; std::cin >> a;
+        BigInt b; std::cout << "Moi thay nhap b = "; std::cin >> b;
 
-        /*if (a > b) std::cout << "a > b" << std::endl;
-        if (a < b) std::cout << "a < b" << std::endl;
-        if (a == b) std::cout << "a == b" << std::endl;
-        if (a <= b) std::cout << "a <= b" << std::endl;
-        if (a >= b) std::cout << "a >= b" << std::endl;*/
-
-        std::cout << "a + b = " << a + b << std::endl;
-        std::cout << "a * b = " << a * b << std::endl;
-        std::cout << "a - b = " << a - b << std::endl;
-
-        //std::cout << "a % m = " << a % m << std::endl;
-        //std::cout << "b % m = " << b % m << std::endl;
-
-        /*std::cout << "(a + b) % m = " << BigInt::modularAddition(a, b, m) << '\n';
-        std::cout << "(a * b) % m = " << BigInt::modularMultiplication(a, b, m) << '\n';*/
+        std::cout << "(a + b) % m = " << BigInt::modularAddition(a, b, m) << '\n';
+        std::cout << "(a * b) % m = " << BigInt::modularMultiplication(a, b, m) << '\n';
     }
     catch (const std::exception& e) {
         std::cout << e.what() << '\n';
