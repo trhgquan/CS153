@@ -1,4 +1,3 @@
-#include<cassert>
 #include<iostream>
 #include<string>
 #include<sstream>
@@ -429,14 +428,22 @@ public:
     }
     static BigInt modularAddition(const BigInt& a, const BigInt& b, const BigInt& m) {
         BigInt zero("0");
-        assert(m > zero);
+        
+        if (m <= zero) {
+            throw std::runtime_error("Invalid modular base");
+        }
+
         BigInt first = (a >= zero) ? a : (m - a);
         BigInt second = (b >= zero) ? b : (m - b);
         return ((first % m) + (second % m)) % m;
     }
     static BigInt modularMultiplication(const BigInt& a, const BigInt& b, const BigInt& m) {
         BigInt zero("0");
-        assert(m > zero);
+
+        if (m <= zero) {
+          throw std::runtime_error("Invalid modular base");
+        }
+
         BigInt first = (a >= zero) ? a : m - a;
         BigInt second = (b >= zero) ? b : m - b;
         return ((first % m) * (second % m)) % m;
