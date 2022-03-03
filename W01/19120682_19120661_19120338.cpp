@@ -1,3 +1,14 @@
+/**
+ * @file 19120682_19120661_19120338.cpp
+ * @author Lê Hoàng Trọng Tín (19120682), Lê Mai Nguyên Thảo (19120661), Trần Hoàng Quân (19120338)
+ * @brief Bài tập về nhà tuần 02: cài đặt phép cộng và phép nhân số nguyên lớn trên Z_p
+ * @version 0.1
+ * @date 2022-03-03
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include<iostream>
 #include<string>
 #include<sstream>
