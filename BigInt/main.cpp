@@ -1,8 +1,8 @@
 /**
  * @file main.cpp
  * @author Lê Hoàng Trọng Tín (19120682), Lê Mai Nguyên Thảo (19120661), Trần Hoàng Quân (19120338)
- * @brief Bài tập về nhà tuần 3 (tự giác): cài đặt thuật toán Euclide & Euclide mở rộng
- * @version 0.2
+ * @brief Thư viện BigInt
+ * @version 0.1
  * @date 2022-03-08
  * 
  * @copyright Copyright (c) 2022
