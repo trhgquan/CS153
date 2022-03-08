@@ -144,6 +144,15 @@ BigInt::BigInt(const BigInt& num) {
     _negative = num._negative;
 }
 
+/**
+ * @brief Set the number's sign (negative or not)
+ * 
+ * @param negativity bool | true = negative, false = positive.
+ */
+void BigInt::setNegative(bool negativity) {
+    _negative = negativity;
+}
+
 void BigInt::operator=(const BigInt& num) {
     _num = num._num;
     _negative = num._negative;
@@ -224,7 +233,11 @@ bool BigInt::operator>=(const std::string& num) const {
 }
 
 BigInt BigInt::operator+(const BigInt& num) const {
-    // Xét dấu phép cộng.
+    // Xét dấu phép cộng. Đơn giản là khác dấu => chuyển sang phép trừ, cùng dấu => mang dấu chung.
+    if (isNegative() != num.isNegative()) {
+        return isNegative() ? num - BigInt(_num, !isNegative()) : *this - BigInt(num._num, !num.isNegative());
+    }
+
     std::stringstream ss;
 
     std::string firstNum = _num;
@@ -254,7 +267,7 @@ BigInt BigInt::operator+(const BigInt& num) const {
         }
     }
 
-    return BigInt(_reverse(ss.str()));
+    return BigInt(_reverse(ss.str()), isNegative());
 }
 
 BigInt BigInt::operator+(const std::string& num) const {
@@ -271,6 +284,32 @@ void BigInt::operator+=(const std::string& num) {
 }
 
 BigInt BigInt::operator-(const BigInt& num) const {
+    // Xét dấu phép trừ:
+    // a > 0, b < 0 aka a - (-b): trả về a + b
+    // a < 0, b > 0 aka -a - b: trả về -(a + b)
+    if (isNegative() != num.isNegative()) {
+        BigInt result = BigInt(_num) + BigInt(num._num);
+        result.setNegative(isNegative());
+        return result;
+    }
+
+    // Nếu cả 2 số đều âm thì lấy num - *this. Hay là, (-a) - (-b) = b - a.
+    if (isNegative() && num.isNegative()) {
+        return BigInt(num._num) - BigInt(_num);
+    }
+
+    // Các trường hợp trừ 0 và 0 trừ.
+    if (num == "0") { 
+        return *this;
+    }
+
+    if (_num == "0" && num != "0") {
+        BigInt result = num;
+        result.setNegative(!num.isNegative());
+        return result;
+    }
+
+    // Trường hợp còn lại - 2 số nguyên dương trừ nhau.
     std::stringstream ss;
 
     std::string firstNum = _num;
@@ -307,7 +346,7 @@ BigInt BigInt::operator-(const BigInt& num) const {
         ss << sub;
     }
 
-    return BigInt(_reverse(ss.str()));
+    return BigInt(_reverse(ss.str()), (*this < num));
 }
 
 BigInt BigInt::operator-(const std::string& num) const {
@@ -327,6 +366,10 @@ BigInt BigInt::operator*(const BigInt& num) const {
 
     std::string firstNum = _num;
     std::string secondNum = num._num;
+
+    if (firstNum == "0" || secondNum == "0") {
+        return BigInt("0");
+    }
 
     BigInt result;
 
@@ -350,6 +393,9 @@ BigInt BigInt::operator*(const BigInt& num) const {
 
         result += BigInt(lineResult); ss.str("");
     }
+
+    // Result sign
+    result.setNegative(isNegative() != num.isNegative());
 
     return result;
 }
@@ -416,10 +462,25 @@ void BigInt::operator%=(const BigInt& num) {
     *this = *this % num;
 }
 
+/**
+ * @brief Max value of the pair <a, b>
+ * 
+ * @param a const BigInt&
+ * @param b const BigInt&
+ * @return BigInt 
+ */
 BigInt BigInt::max(const BigInt& a, const BigInt& b) {
     return (a > b) ? a : b;
 }
 
+/**
+ * @brief Modular addition (aka (a + b) % m)
+ * 
+ * @param a const BigInt&
+ * @param b const BigInt&
+ * @param m const BigInt&
+ * @return BigInt 
+ */
 BigInt BigInt::modularAddition(const BigInt& a, const BigInt& b, const BigInt& m) {
     BigInt zero("0");
     
@@ -432,6 +493,14 @@ BigInt BigInt::modularAddition(const BigInt& a, const BigInt& b, const BigInt& m
     return ((first % m) + (second % m)) % m;
 }
 
+/**
+ * @brief Modular multiplication (aka (a * b) % m)
+ * 
+ * @param a const BigInt&
+ * @param b const BigInt&
+ * @param m const BigInt&
+ * @return BigInt 
+ */
 BigInt BigInt::modularMultiplication(const BigInt& a, const BigInt& b, const BigInt& m) {
     BigInt zero("0");
 
@@ -444,12 +513,30 @@ BigInt BigInt::modularMultiplication(const BigInt& a, const BigInt& b, const Big
     return ((first % m) * (second % m)) % m;
 }
 
+/**
+ * @brief Find Greatest Common Divisor of (a, b)
+ * 
+ * @param a BigInt
+ * @param b BigInt
+ * @return BigInt 
+ */
 BigInt BigInt::GCD(BigInt a, BigInt b) {
     BigInt c = a % b;
     while (c > "0") {
         a = b; b = c; c = a % b;
     }
     return b;
+}
+
+/**
+ * @brief Tìm Bezout Identity (aka tìm x, y sao cho ax + by = (a, b))
+ * 
+ * @param a const BigInt&
+ * @param b const BigInt&
+ * @return std::vector<BigInt> 
+ */
+std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
+    // Bezout implementation goes here.
 }
 
 std::istream& operator>>(std::istream& in, BigInt& num) {
@@ -463,5 +550,12 @@ std::ostream& operator<<(std::ostream& out, const BigInt& num) {
         out << '-';
     }
     out << num._num;
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const std::vector<BigInt>& numVector) {
+    for (auto& num : numVector) {
+        out << num << ' ';
+    }
     return out;
 }

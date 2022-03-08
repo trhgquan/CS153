@@ -4,7 +4,7 @@
 #include<iostream>
 #include<string>
 #include<sstream>
-#include<tuple>
+#include<vector>
 
 class BigInt {
 private:
@@ -29,6 +29,7 @@ public:
 public:
     bool isNegative() const;
 public:
+    void setNegative(bool);
     char& operator[](const int);
     bool operator<(const BigInt&) const;
     bool operator<(const std::string&) const;
@@ -54,6 +55,10 @@ public:
     BigInt operator*(const std::string&) const;
     void operator*=(const BigInt&);
     void operator*=(const std::string&);
+
+    // TODO: Phép chia số nguyên goes here.
+    
+    // TODO: Thay cái thuật củ chuối trong phép mod bằng phép chia số nguyên.
     BigInt operator%(const BigInt&) const;
     BigInt operator%(const std::string&) const;
     void operator%=(const BigInt&);
@@ -62,9 +67,11 @@ public:
     static BigInt modularAddition(const BigInt&, const BigInt&, const BigInt&);
     static BigInt modularMultiplication(const BigInt&, const BigInt&, const BigInt&);
     static BigInt GCD(BigInt, BigInt);
+    static std::vector<BigInt> Bezout(const BigInt&, const BigInt&);
 public:
     friend std::istream& operator>>(std::istream&, BigInt&);
     friend std::ostream& operator<<(std::ostream&, const BigInt&);
+    friend std::ostream& operator<<(std::ostream&, const std::vector<BigInt>&);
 };
 
 #endif
