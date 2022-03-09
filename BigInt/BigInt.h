@@ -68,6 +68,7 @@ public:
     static BigInt modularMultiplication(const BigInt&, const BigInt&, const BigInt&);
     static BigInt GCD(BigInt, BigInt);
     static std::vector<BigInt> Bezout(const BigInt&, const BigInt&);
+    static BigInt inverseModulo(const BigInt&, const BigInt&);
 public:
     friend std::istream& operator>>(std::istream&, BigInt&);
     friend std::ostream& operator<<(std::ostream&, const BigInt&);

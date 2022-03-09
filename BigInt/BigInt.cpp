@@ -467,27 +467,44 @@ BigInt BigInt::operator%(const BigInt& base) const {
         return !(lastDigit & 1) ? zero : one;
     }
 
-    if (*this < base) {
+    if (*this < base && isNegative() == base.isNegative()) {
         return *this;
     }
 
     // Modulo operator goes here
     BigInt currentNum = *this;
 
-    while (currentNum >= base) {
-        BigInt currentBase = base;
-        
-        while (1) {
-            BigInt tempBase = currentBase * ten;
-            if (currentNum < tempBase) break;
+    if (currentNum > zero) {
+        while (currentNum >= base) {
+            BigInt currentBase = base;
+            
+            while (1) {
+                BigInt tempBase = currentBase * ten;
+                if (currentNum < tempBase) break;
 
-            currentBase = tempBase;
+                currentBase = tempBase;
+            }
+            
+            currentNum -= currentBase;
         }
-        
-        currentNum -= currentBase;
-    };
+    }
+    else {
+        while (currentNum < base) {
+            BigInt currentBase = base;
+            currentBase.setNegative(true);
+            
+            while (1) {
+                BigInt tempBase = currentBase * ten;
+                if (currentNum >= tempBase) break;
 
-    return currentNum;
+                currentBase = tempBase;
+            }
+            
+            currentNum -= currentBase;
+        }
+    }
+
+    return (currentNum > base) ? currentNum % base : currentNum;
 }
 
 BigInt BigInt::operator%(const std::string& base) const {
@@ -583,6 +600,25 @@ std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
         recursiveResult[2] - (b / a) * recursiveResult[1],
         recursiveResult[1]
     };
+}
+
+/**
+ * @brief Tìm modulo nghịch đảo của a (aka ax \equiv 1 (mod m))
+ * 
+ * @param a const BigInt& a
+ * @param m const BigInt& m
+ * @return BigInt 
+ * 
+ * @throw std::runtime_error
+ */
+BigInt BigInt::inverseModulo(const BigInt& a, const BigInt& m) {
+    std::vector<BigInt> res = Bezout(a, m);
+
+    if (res[0] != "1") {
+        throw std::runtime_error("Inverse modulo doesn't exist");
+    }
+
+    return res[1] % m;
 }
 
 std::istream& operator>>(std::istream& in, BigInt& num) {
