@@ -413,6 +413,43 @@ void BigInt::operator*=(const std::string& num) {
     *this *= BigInt(num);
 }
 
+BigInt BigInt::operator/(const BigInt& num) const {
+    BigInt zero("0"), one("1");
+
+    BigInt remainder = *this % num;
+
+    if (num == *this) {
+        return one;
+    }
+
+    if (remainder == *this) {
+        return zero;
+    }
+
+    BigInt divider = *this - remainder;
+    BigInt dividant = num;
+    BigInt quotient("1");
+
+    while (divider >= dividant) {
+        if (dividant == divider) break;
+        quotient += one; dividant = num * quotient;
+    }
+
+    return quotient;
+}
+
+BigInt BigInt::operator/(const std::string& num) const {
+    return *this / BigInt(num);
+}
+
+void BigInt::operator/=(const BigInt& num) {
+    *this = *this / num;
+}
+
+void BigInt::operator/=(const std::string& num) {
+    *this /= BigInt(num);
+}
+
 BigInt BigInt::operator%(const BigInt& base) const {
     // Goes brrr
     if (base == "0") {
@@ -437,7 +474,7 @@ BigInt BigInt::operator%(const BigInt& base) const {
     // Modulo operator goes here
     BigInt currentNum = *this;
 
-    while (currentNum > base) {
+    while (currentNum >= base) {
         BigInt currentBase = base;
         
         while (1) {
@@ -536,7 +573,16 @@ BigInt BigInt::GCD(BigInt a, BigInt b) {
  * @return std::vector<BigInt> 
  */
 std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
-    // Bezout implementation goes here.
+    if (a == "0") {
+        return std::vector<BigInt>{b, BigInt("0"), BigInt("1")};
+    }
+
+    std::vector<BigInt> recursiveResult = Bezout(b % a, a);
+    return std::vector<BigInt>{
+        recursiveResult[0], 
+        recursiveResult[2] - (b / a) * recursiveResult[1],
+        recursiveResult[1]
+    };
 }
 
 std::istream& operator>>(std::istream& in, BigInt& num) {

@@ -55,10 +55,10 @@ public:
     BigInt operator*(const std::string&) const;
     void operator*=(const BigInt&);
     void operator*=(const std::string&);
-
-    // TODO: Phép chia số nguyên goes here.
-    
-    // TODO: Thay cái thuật củ chuối trong phép mod bằng phép chia số nguyên.
+    BigInt operator/(const BigInt&) const;
+    BigInt operator/(const std::string&) const;
+    void operator /=(const BigInt&);
+    void operator /=(const std::string&);
     BigInt operator%(const BigInt&) const;
     BigInt operator%(const std::string&) const;
     void operator%=(const BigInt&);
