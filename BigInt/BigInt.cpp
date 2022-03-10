@@ -11,6 +11,16 @@ int BigInt::_charIntToInt(char c) const {
 }
 
 /**
+ * @brief Convert an int to char.
+ * 
+ * @param num int
+ * @return char
+ */
+char BigInt::_intToChar(int num) const {
+    return num + '0';
+}
+
+/**
  * @brief Reverse a string.
  * 
  * @param str const std::string&
@@ -413,98 +423,69 @@ void BigInt::operator*=(const std::string& num) {
     *this *= BigInt(num);
 }
 
-BigInt BigInt::operator/(const BigInt& num) const {
+/**
+ * @note Thuật tham khảo từ Tài liệu giáo khoa chuyên tin, quyển 1 
+ * 
+ * (c) thầy Hồ Sĩ Đàm, Đỗ Đức Đông, Lê Minh Hoàng, Nguyễn Thanh Hùng.
+ * 
+ * @param  num const BigInt&
+ * @return std::tuple<quotient, remainder>
+ */
+std::tuple<BigInt, BigInt> BigInt::operator/(const BigInt& num) const {
     BigInt zero("0"), one("1");
 
-    BigInt remainder = *this % num;
-
-    if (num == *this) {
-        return one;
+    if (num == zero) {
+        throw std::runtime_error("Zero divison");
     }
 
-    if (remainder == *this) {
-        return zero;
+    std::vector<BigInt> kb(11);
+    kb[0] = BigInt("0");
+
+    for (int i = 1; i <= 10; ++i) {
+        kb[i] = kb[i - 1] + num;
     }
 
-    BigInt divider = *this - remainder;
-    BigInt dividant = num;
-    BigInt quotient("1");
+    BigInt c(zero);
+    std::string hold = "";
 
-    while (divider >= dividant) {
-        if (dividant == divider) break;
-        quotient += one; dividant = num * quotient;
+    for (int i = 0; i < (int)_num.length(); ++i) {
+        hold = hold + _num[i];
+
+        int k = 0;
+        while (kb[k] <= hold) ++k;
+
+        c._num += _intToChar(k - 1);
+
+        hold = (BigInt(hold) - kb[k - 1])._num;
     }
 
-    return quotient;
+    while (c._num.size() > 1 && c[0] == '0') {
+        c._num.erase(0, 1);
+    }
+
+    return std::make_tuple(BigInt(c), BigInt(hold));
 }
 
-BigInt BigInt::operator/(const std::string& num) const {
+std::tuple<BigInt, BigInt> BigInt::operator/(const std::string& num) const {
     return *this / BigInt(num);
 }
 
 void BigInt::operator/=(const BigInt& num) {
-    *this = *this / num;
+    *this = std::get<0>(*this / num);
 }
 
 void BigInt::operator/=(const std::string& num) {
     *this /= BigInt(num);
 }
 
+/**
+ * @note Thuật tham khảo từ Tài liệu giáo khoa chuyên tin, quyển 1
+ *
+ * (c) thầy Hồ Sĩ Đàm, Đỗ Đức Đông, Lê Minh Hoàng, Nguyễn Thanh Hùng.
+ */
 BigInt BigInt::operator%(const BigInt& base) const {
     // Goes brrr
-    if (base == "0") {
-        throw std::runtime_error("Zero division encountered");
-    }
-
-    BigInt zero("0"), one("1"), ten("10");
-
-    if (base == "1" || base == *this) {
-        return zero;
-    }
-
-    if (base == "2") {
-        int lastDigit = _charIntToInt(*prev(_num.end()));
-        return !(lastDigit & 1) ? zero : one;
-    }
-
-    if (*this < base && isNegative() == base.isNegative()) {
-        return *this;
-    }
-
-    // Modulo operator goes here
-    BigInt currentNum = *this;
-
-    if (currentNum > zero) {
-        while (currentNum >= base) {
-            BigInt currentBase = base;
-            
-            while (1) {
-                BigInt tempBase = currentBase * ten;
-                if (currentNum < tempBase) break;
-
-                currentBase = tempBase;
-            }
-            
-            currentNum -= currentBase;
-        }
-    }
-    else {
-        while (currentNum < base) {
-            BigInt currentBase = base;
-            currentBase.setNegative(true);
-            
-            while (1) {
-                BigInt tempBase = currentBase * ten;
-                if (currentNum >= tempBase) break;
-
-                currentBase = tempBase;
-            }
-            
-            currentNum -= currentBase;
-        }
-    }
-
-    return (currentNum > base) ? currentNum % base : currentNum;
+    return std::get<1>(*this / base);
 }
 
 BigInt BigInt::operator%(const std::string& base) const {
@@ -597,7 +578,7 @@ std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
     std::vector<BigInt> recursiveResult = Bezout(b % a, a);
     return std::vector<BigInt>{
         recursiveResult[0], 
-        recursiveResult[2] - (b / a) * recursiveResult[1],
+        recursiveResult[2] - std::get<0>(b / a) * recursiveResult[1],
         recursiveResult[1]
     };
 }

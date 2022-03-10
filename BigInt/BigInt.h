@@ -5,6 +5,7 @@
 #include<string>
 #include<sstream>
 #include<vector>
+#include<tuple>
 
 class BigInt {
 private:
@@ -12,6 +13,7 @@ private:
     bool _negative;
 private:
     int _charIntToInt(char) const;
+    char _intToChar(int) const;
     std::string _reverse(const std::string&) const;
     std::string _removeLeadingZeros(const std::string&) const;
     void _addLeadingZeros(std::string&, int) const;
@@ -55,8 +57,8 @@ public:
     BigInt operator*(const std::string&) const;
     void operator*=(const BigInt&);
     void operator*=(const std::string&);
-    BigInt operator/(const BigInt&) const;
-    BigInt operator/(const std::string&) const;
+    std::tuple<BigInt, BigInt> operator/(const BigInt&) const;
+    std::tuple<BigInt, BigInt> operator/(const std::string&) const;
     void operator /=(const BigInt&);
     void operator /=(const std::string&);
     BigInt operator%(const BigInt&) const;
