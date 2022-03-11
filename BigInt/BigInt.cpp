@@ -459,9 +459,7 @@ std::tuple<BigInt, BigInt> BigInt::operator/(const BigInt& num) const {
         hold = (BigInt(hold) - kb[k - 1])._num;
     }
 
-    while (c._num.size() > 1 && c[0] == '0') {
-        c._num.erase(0, 1);
-    }
+    c._num = _removeLeadingZeros(c._num);
 
     return std::make_tuple(BigInt(c), BigInt(hold));
 }
