@@ -452,7 +452,7 @@ std::tuple<BigInt, BigInt> BigInt::operator/(const BigInt& num) const {
         hold = hold + _num[i];
 
         int k = 0;
-        while (kb[k] <= hold) ++k;
+        for(; kb[k] <= hold; ++k);
 
         c._num += _intToChar(k - 1);
 
@@ -482,7 +482,12 @@ void BigInt::operator/=(const std::string& num) {
  * (c) thầy Hồ Sĩ Đàm, Đỗ Đức Đông, Lê Minh Hoàng, Nguyễn Thanh Hùng.
  */
 BigInt BigInt::operator%(const BigInt& base) const {
-    // Goes brrr
+    auto result = *this / base;
+
+    if (*this < "0") {
+        return base - std::get<1>(result);
+    }
+
     return std::get<1>(*this / base);
 }
 
@@ -566,19 +571,22 @@ BigInt BigInt::GCD(BigInt a, BigInt b) {
  * 
  * @param a const BigInt&
  * @param b const BigInt&
- * @return std::vector<BigInt> 
+ * @return std::tuple<BigInt, BigInt, BigInt>
  */
-std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
+std::tuple<BigInt, BigInt, BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
     if (a == "0") {
-        return std::vector<BigInt>{b, BigInt("0"), BigInt("1")};
+        return std::tuple<BigInt, BigInt, BigInt>{b, BigInt("0"), BigInt("1")};
     }
 
-    std::vector<BigInt> recursiveResult = Bezout(b % a, a);
-    return std::vector<BigInt>{
-        recursiveResult[0], 
-        recursiveResult[2] - std::get<0>(b / a) * recursiveResult[1],
-        recursiveResult[1]
+    auto recursiveResult = Bezout(b % a, a);
+
+    std::tuple<BigInt, BigInt, BigInt> result {
+        std::get<0>(recursiveResult),
+        std::get<2>(recursiveResult) - std::get<0>(b / a) * std::get<1>(recursiveResult),
+        std::get<1>(recursiveResult)
     };
+
+    return result;
 }
 
 /**
@@ -591,13 +599,13 @@ std::vector<BigInt> BigInt::Bezout(const BigInt& a, const BigInt& b) {
  * @throw std::runtime_error
  */
 BigInt BigInt::inverseModulo(const BigInt& a, const BigInt& m) {
-    std::vector<BigInt> res = Bezout(a, m);
+    auto res = Bezout(a, m);
 
-    if (res[0] != "1") {
+    if (std::get<0>(res) != "1") {
         throw std::runtime_error("Inverse modulo doesn't exist");
     }
 
-    return res[1] % m;
+    return std::get<1>(res) % m;
 }
 
 std::istream& operator>>(std::istream& in, BigInt& num) {
@@ -614,9 +622,12 @@ std::ostream& operator<<(std::ostream& out, const BigInt& num) {
     return out;
 }
 
-std::ostream& operator<<(std::ostream& out, const std::vector<BigInt>& numVector) {
-    for (auto& num : numVector) {
-        out << num << ' ';
-    }
+std::ostream& operator<<(std::ostream& out, const std::tuple<BigInt, BigInt, BigInt>& numVector) {
+    out << std::get<0>(numVector);
+    out << ' ';
+    out << std::get<1>(numVector);
+    out << ' ';
+    out << std::get<2>(numVector);
+    out << ' ';
     return out;
 }
