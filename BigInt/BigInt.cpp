@@ -384,9 +384,9 @@ BigInt BigInt::operator*(const BigInt& num) const {
     BigInt result;
 
     int carry = 0;
-    for (int i = secondNum.length() - 1; i >= 0; --i) {
+    for (int i = (int)secondNum.length() - 1; i >= 0; --i) {
         if (secondNum[i] == '0') continue;
-        for (int j = firstNum.length() - 1; j >= 0; --j) {
+        for (int j = (int)firstNum.length() - 1; j >= 0; --j) {
             int current_prod = _charIntToInt(firstNum[j]) * _charIntToInt(secondNum[i]) + carry;
 
             ss << current_prod % 10;
@@ -432,14 +432,13 @@ void BigInt::operator*=(const std::string& num) {
  * @return std::tuple<quotient, remainder>
  */
 std::tuple<BigInt, BigInt> BigInt::operator/(const BigInt& num) const {
-    BigInt zero("0"), one("1");
+    BigInt zero("0");
 
     if (num == zero) {
         throw std::runtime_error("Zero divison");
     }
 
-    std::vector<BigInt> kb(11);
-    kb[0] = BigInt("0");
+    std::vector<BigInt> kb(11, zero);
 
     for (int i = 1; i <= 10; ++i) {
         kb[i] = kb[i - 1] + num;
