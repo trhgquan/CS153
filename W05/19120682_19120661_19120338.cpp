@@ -1,3 +1,13 @@
+/**
+ * @file 19120682_19120661_19120338.cpp
+ * @author Le Hoang Trong Tin (19120682), Le Mai Nguyen Thao (19120661), Tran Hoang Quan (19120338) 
+ * @brief Bai tap ve nha tuan 05: cai dat thuat toan expand(K)
+ * @version 0.1
+ * @date 2022-03-26
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 #include <iostream>
 
 #define C_SIZE 11
@@ -49,10 +59,10 @@ void KeyExpansionCore(unsigned char* in, unsigned char i) {
     in[0] ^= C[i];
 }
 
-void KeyExpansion(unsigned char inputKey[INPUT_SIZE], unsigned char expandedKeys[TOTAL_SIZE]) {
+void KeyExpansion(unsigned char keyInput[INPUT_SIZE], unsigned char keyExpanded[TOTAL_SIZE]) {
     // 128 bit dau la key goc.
     for (int i = 0; i < INPUT_SIZE; i++) {
-        expandedKeys[i] = inputKey[i];
+        keyExpanded[i] = keyInput[i];
     }
 
     // Tong so bytes da generate.
@@ -66,7 +76,7 @@ void KeyExpansion(unsigned char inputKey[INPUT_SIZE], unsigned char expandedKeys
 
     while (bytesGenerated < TOTAL_SIZE) {
         for (int i = 0; i < TEMP_SIZE; i++) {
-            tmpCore[i] = expandedKeys[i + bytesGenerated - TEMP_SIZE];
+            tmpCore[i] = keyExpanded[i + bytesGenerated - TEMP_SIZE];
         }
 
         // 16 bytes du 1 key,
@@ -75,17 +85,17 @@ void KeyExpansion(unsigned char inputKey[INPUT_SIZE], unsigned char expandedKeys
         }
 
         for (unsigned char a = 0; a < TEMP_SIZE; a++) {
-            expandedKeys[bytesGenerated] = expandedKeys[bytesGenerated - INPUT_SIZE] ^ tmpCore[a];
+            keyExpanded[bytesGenerated] = keyExpanded[bytesGenerated - INPUT_SIZE] ^ tmpCore[a];
             bytesGenerated++;
         }
     }
 }
 
 int main() {
-    unsigned char inputKey[INPUT_SIZE + 1] = "Thats my Kung Fu";
+    unsigned char keyInput[INPUT_SIZE + 1] = "Thats my Kung Fu";
     unsigned char keyExpanded[TOTAL_SIZE];
 
-    KeyExpansion(inputKey, keyExpanded);
+    KeyExpansion(keyInput, keyExpanded);
 
     for (int i = 0; i < TOTAL_SIZE; ++i) {
         if (i % INPUT_SIZE == 0) {
