@@ -1,7 +1,25 @@
+/**
+ * @file main.cpp
+ * @author Lê Hoàng Trọng Tín (19120682), Lê Mai Nguyên Thảo (19120661), Trần Hoàng Quân (19120338)
+ * @brief Bài tập tuần 07 - Cài đặt thuật toán Rabin-Miller.
+ * @version 0.1
+ * @date 2022-04-04
+ * 
+ * @copyright Copyright (c) 2022
+ */
 #include<iostream>
 #include<vector>
 #define longint uint64_t 
+#define TEST_BASE_SIZE 3
 
+/**
+ * @brief PowerMod (x^b mod n)
+ * 
+ * @param x longint (uint64_t)
+ * @param b longint (uint64_t)
+ * @param n longint (uint64_t)
+ * @return longint 
+ */
 longint powmod(longint x, longint b, longint n) {
     std::vector<int> bb;
     while (b > 0) {
@@ -21,8 +39,48 @@ longint powmod(longint x, longint b, longint n) {
     return z;
 }
 
+/**
+ * @brief Rabin-Miller test for an integer p with base a
+ * 
+ * @param p number to do primarity check
+ * @param a base
+ * @return true if p is a prime, false otherwise.
+ */
+bool MillerRabinTest(longint p, longint a) {
+    longint m = p - 1;
+    
+    int k = 0;
+
+    while (!(m & 1)) {
+        m >>= 1; ++k;
+    }
+
+    longint b = powmod(a, m, p);
+    
+    if ((b % p) == 1) {
+        return true;
+    }
+
+    for (int i = 0; i < k; ++i) {
+        if ((b % p) == p - 1) {
+            return true;
+        }
+        b = powmod(b, 2, p);
+    }
+
+    return false;
+}
+
 int main() {
-    longint x, b, n; std::cin >> x >> b >> n;
-    std::cout << powmod(x, b, n) << std::endl;
+    longint a = 2;
+    longint p; std::cout << "Nhap p = "; std::cin >> p;
+
+    if (MillerRabinTest(p, a)) {
+        std::cout << p << " la so nguyen to co so " << a << '\n';
+    }
+    else {
+        std::cout << p << " la hop so\n";
+    }
+
     return 0;
 }
