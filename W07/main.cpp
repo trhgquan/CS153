@@ -10,7 +10,6 @@
 #include<iostream>
 #include<vector>
 #define longint uint64_t 
-#define TEST_BASE_SIZE 3
 
 /**
  * @brief PowerMod (x^b mod n)
@@ -24,7 +23,7 @@ longint powmod(longint x, longint b, longint n) {
     std::vector<int> bb;
     while (b > 0) {
         bb.push_back(b % 2);
-        b /= 2;
+        b >>= 1;
     }
 
     longint z = 1;
@@ -72,8 +71,8 @@ bool MillerRabinTest(longint p, longint a) {
 }
 
 int main() {
-    longint a = 2;
-    longint p; std::cout << "Nhap p = "; std::cin >> p;
+    longint a; std::cout << "Nhap co so a = "; std::cin >> a;
+    longint p; std::cout << "Nhap so nguyen p = "; std::cin >> p;
 
     if (MillerRabinTest(p, a)) {
         std::cout << p << " la so nguyen to co so " << a << '\n';
