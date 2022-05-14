@@ -14,18 +14,12 @@
 
 #define power 0x100000000
 
-/**
- * @brief Parse mot integer vao 2 bien 4 byte de bieu dien so nguyen 64bit.
- * @source: ...
- */
-#define SPLIT_INT_TO_BIT(a, b, c) if (a > 0xffffffff - c) ++b; a += c; 
-
 class MD5 {
 private:
     unsigned char _message[64];
     unsigned int _messageLength;
     unsigned int _bitLength[2];
-    unsigned int _A, _B, _C, _D;
+    unsigned int _A0, _B0, _C0, _D0;
     unsigned int _s[64] = {
         7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
         5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
@@ -33,67 +27,10 @@ private:
         6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21
     };
     unsigned int _K[64];
-    unsigned char _hash[16];
+    unsigned char _digest[16];
 
-public:
-    /**
-     * @brief Code xoay number - times lan.
-     * @source https://stackoverflow.com/a/38776153/18152787
-     * 
-     * @param number 
-     * @param times 
-     * @return unsigned int 
-     */
-    static unsigned int rotateLeft(unsigned int number, unsigned int times) {
-        return (number << times) | (number >> (8 * sizeof(unsigned int) - times));
-    }
-
-public:
-    MD5() {
-        // Do nothing
-    }
-
-    MD5(const char* s, unsigned int stringLength) {
-        init(s, stringLength);
-        final();
-    }
-
-    void init(const char* s, unsigned int stringLength) {
-        // K constant initialise
-        for (int i = 0; i < 64; ++i) {
-          // Cong thuc tinh K da co trong slide, cai hex nay la 2^32.
-          _K[i] = floor(abs(sin(i + 1)) * power);
-        }
-
-        // Init message length
-        _messageLength = 0;
-
-        _bitLength[0] = 0;
-        _bitLength[1] = 0;
-
-        // Init states
-        _A = 0x67452301;
-        _B = 0xEFCDAB89;
-        _C = 0x98BADCFE;
-        _D = 0x10325476;
-
-        //  Preprocessing.
-        for (unsigned int i = 0; i < stringLength; ++i) {
-            _message[_messageLength] = s[i];
-            _messageLength++;
-            if (_messageLength == 64) {
-                // Ket thuc moi block 512 bits, tien hanh transform.
-                transform();
-
-                // Luu 512 vao _bitLength
-                SPLIT_INT_TO_BIT(_bitLength[0], _bitLength[1], 512);
-
-                _messageLength = 0;
-            }
-        }
-    }
-
-    void transform() {
+private:
+    void _transform() {
         // Chuyen block 512 bits thanh 16 word 32bits.
         unsigned int m[16]; int j = 0;
         
@@ -103,10 +40,10 @@ public:
             j += 4;
         }
 
-        unsigned int a = _A;
-        unsigned int b = _B;
-        unsigned int c = _C;
-        unsigned int d = _D;
+        unsigned int a = _A0;
+        unsigned int b = _B0;
+        unsigned int c = _C0;
+        unsigned int d = _D0;
         
         for (int i = 0; i < 64; ++i) {
             unsigned int f, g;
@@ -140,13 +77,45 @@ public:
             a = d; d = c; c = b; b += rotateLeft(f, _s[i]);
         }
 
-        _A += a;
-        _B += b;
-        _C += c;
-        _D += d;
+        _A0 += a;
+        _B0 += b;
+        _C0 += c;
+        _D0 += d;
     }
-    
-    void final() {
+
+    void _init(const char* s, unsigned int stringLength) {
+        // Tinh hang so K
+        for (int i = 0; i < 64; ++i) {
+          // Cong thuc tinh K da co trong slide, cai hex nay la 2^32.
+          _K[i] = floor(abs(sin(i + 1)) * power);
+        }
+
+        // Message length ban dau bang 0
+        _messageLength = 0;
+
+        _bitLength[0] = 0;
+        _bitLength[1] = 0;
+
+        // a0, b0, c0, d0
+        _A0 = 0x67452301;
+        _B0 = 0xEFCDAB89;
+        _C0 = 0x98BADCFE;
+        _D0 = 0x10325476;
+
+        //  Preprocessing.
+        for (unsigned int i = 0; i < stringLength; ++i) {
+            _message[_messageLength] = s[i];
+            _messageLength++;
+            if (_messageLength == 64) {
+                // Ket thuc moi block 512 bits, tien hanh transform.
+                _transform();
+                plusInt(_bitLength[0], _bitLength[1], 512);
+                _messageLength = 0;
+            }
+        }
+    }
+
+    void _final() {
         // Pad phan con lai cua data.
         unsigned int i = _messageLength;
         
@@ -161,11 +130,11 @@ public:
             for (; i < 64; ++i) {
                 _message[i] = 0x00;
             }
-            transform();
+            _transform();
             memset(_message, 0, 56);
         }
 
-        SPLIT_INT_TO_BIT(_bitLength[0], _bitLength[1], 8 * _messageLength);
+        plusInt(_bitLength[0], _bitLength[1], 8 * _messageLength);
 
         // Pad block cuoi
         for (int i = 0; i < 4; ++i) {
@@ -175,33 +144,85 @@ public:
             _message[60 + i] = _bitLength[1] >> (i * 8);
         }
 
-        transform();
+        _transform();
 
         // Chuyen tu little endian ve lai big endian.
         for (int i = 0; i < 4; ++i) {
-            _hash[i]      = (_A >> (i * 8)) & 0x000000ff;
-            _hash[i + 4]  = (_B >> (i * 8)) & 0x000000ff;
-            _hash[i + 8]  = (_C >> (i * 8)) & 0x000000ff;
-            _hash[i + 12] = (_D >> (i * 8)) & 0x000000ff;
+            _digest[i]      = (_A0 >> (i * 8)) & 0x000000ff;
+            _digest[i + 4]  = (_B0 >> (i * 8)) & 0x000000ff;
+            _digest[i + 8]  = (_C0 >> (i * 8)) & 0x000000ff;
+            _digest[i + 12] = (_D0 >> (i * 8)) & 0x000000ff;
         }
     }
 
-    void hash() {
+public:
+    MD5() {
+        // Do nothing
+    }
+
+    MD5(const char* s, unsigned int stringLength) {
+        _init(s, stringLength);
+        _final();
+    }
+
+    unsigned char* digest() {
+        unsigned char* digest = (unsigned char*)malloc(16);
         for (int i = 0; i < 16; ++i) {
-            printf("%02x", _hash[i]);
+            digest[i] = _digest[i];
         }
+        return digest;
     }
 
     ~MD5() {
         // Do nothing;
     }
+    
+public:
+    /**
+     * @brief Code xoay number times lan.
+     * @source: https://stackoverflow.com/a/38776153/18152787
+     * 
+     * @param number 
+     * @param times 
+     * @return unsigned int 
+     */
+    static unsigned int rotateLeft(unsigned int number, unsigned int times) {
+        return (number << times) | (number >> (8 * sizeof(unsigned int) - times));
+    }
+
+    /**
+     * @brief Cong so c vao so nguyen 64 bit luu trong 2 bien 32 bit a va b.
+     * 
+     * @param a 
+     * @param b 
+     * @param c 
+     */
+    static void plusInt(unsigned int& a, unsigned int& b, unsigned int c) {
+        if (a > 0xffffffff - c) {
+            ++b;
+        }
+        a += c; 
+    }
 };
 
 int main() {
-    const char s[] = {"fit.hcmus"};
+    const char* s[] = {{""}, {"fit.hcmus"}};
 
-    MD5 m(s, strlen(s));
-    m.hash();
+    for (int i = 0; i < (sizeof(s) / sizeof(s[0])); ++i) {
+        MD5 m(s[i], strlen(s[i]));
+        unsigned char* digest = m.digest();
+
+        printf("Message: %s (length: %d)\n", s[i], strlen(s[i]));
+        printf("Digest: ");
+        
+        for (int i = 0; i < 16; ++i) {
+            printf("%02x", digest[i]);
+        }
+        printf("\n");
+
+        free(digest);
+    }
+    
 
     return 0;
 }
