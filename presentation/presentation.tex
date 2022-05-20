@@ -20,14 +20,44 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Nội dung}
-	\tableofcontents
+\frametitle{Nội dung}
+\tableofcontents
 \end{frame}
 
 \section{Giới thiệu}
 \begin{frame}
-	\frametitle{Giới thiệu}
+\frametitle{Giới thiệu}
+Một ví dụ trong thế giới thực: Bạn đi siêu thị mua hàng và thanh toán bằng thẻ tín dụng.
+\begin{enumerate}
+\item Nhân viên thu ngân xác nhận thẻ của bạn là thẻ thật (e.g tìm và xác nhận hologram in trước thẻ).
+\item Nhân viên thu ngân quẹt thẻ để xác nhận thẻ chưa bị khóa \& còn đủ tiền để mua hàng.
+\item Nhân viên thu ngân in biên lai và đưa bạn kí.
+\item Chữ kí của bạn giống chữ kí phía sau thẻ, vậy là đã thanh toán thành công.
+\end{enumerate}
 \end{frame}
+
+\begin{frame}
+\frametitle{Giới thiệu (cont.)}
+Giao dịch trong ví dụ trên có sự trao đổi thông tin (credentials) giữa người mua và người bán, từ đó thiết lập sự tin tưởng rằng người mua có đủ điều kiện để mua đồ, và người bán có đủ điều kiện để bán.
+
+Mục đích cuối cùng của Trust Negotiation:
+\begin{itemize}
+\item Thiết lập sự tin cậy (Trust Establishment) giữa các bên tham gia.
+\item Dù trao đổi nhiều thông tin (credentials) với nhau, các thông tin này phải được giữ an toàn.
+\end{itemize}
+\end{frame}
+
+\section{Trust Negotiation}
+\begin{frame}
+\frametitle{Trust Establishment}
+Trust Establishment: thiết lập sự tin cậy giữa những "người lạ" trong hệ thống mở:
+\begin{itemize}
+\item Client và Server không cùng security domain (e.g có cơ chế bảo mật khác nhau).
+\item Quyết định cấp quyền truy cập dựa vào thuộc tính (attribute), không dựa vào danh tính (identity).
+\item Quyền của client phụ thuộc vào tổ chức của client.
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Demo}
@@ -47,7 +77,7 @@
 \end{frame}
 
 \begin{frame}
-%\frametitle{Tài liệu}
+\frametitle{Tài liệu}
 \printbibliography
 \end{frame}
 \end{document}
