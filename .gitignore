@@ -2,6 +2,7 @@
 .vscode/
 *.exe
 *.swp
+*.pdf
 
 ## LaTeX ignore ##
 ## Core latex/pdflatex auxiliary files:
