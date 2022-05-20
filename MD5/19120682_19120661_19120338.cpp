@@ -206,7 +206,7 @@ public:
 };
 
 int main() {
-    const char* s[] = {{""}, {"fit.hcmus"}};
+    const char* s[] = {{""}, {"thinh"}};
 
     for (int i = 0; i < (sizeof(s) / sizeof(s[0])); ++i) {
         MD5 m(s[i], strlen(s[i]));
