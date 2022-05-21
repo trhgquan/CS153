@@ -32,7 +32,7 @@ Một ví dụ trong thế giới thực: Bạn đi siêu thị mua hàng và th
 \item Nhân viên thu ngân xác nhận thẻ của bạn là thẻ thật (e.g tìm và xác nhận hologram in trước thẻ).
 \item Nhân viên thu ngân quẹt thẻ để xác nhận thẻ chưa bị khóa \& còn đủ tiền để mua hàng.
 \item Nhân viên thu ngân in biên lai và đưa bạn kí.
-\item Chữ kí của bạn giống chữ kí phía sau thẻ, vậy là đã thanh toán thành công.
+\item Nhân viên xác nhận chữ kí của bạn giống chữ kí phía sau thẻ, vậy là đã thanh toán thành công.
 \end{enumerate}
 \end{frame}
 
@@ -58,20 +58,49 @@ Trust Establishment: thiết lập sự tin cậy giữa những "người lạ"
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{Trust Negotiation}
+Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy cập và xác thực, cho phép người yêu cầu tài nguyên (resource requesters) và nhà cung cấp (providers) thiết lập sự tin cậy trong các hệ thống mở, dựa trên các thuộc tính (attributes) hơn là danh tính (identity).
+\begin{itemize}
+\item Trao đổi các thông tin điện tử giữa các bên một cách tuần tự.
+\item Đầu tiên trao đổi các thông tin ít nhạy cảm, khi độ tin cậy tăng thì trao đổi các thông tin nhạy cảm hơn.
+\end{itemize}
+\end{frame}
 
+
+\begin{frame}
+\frametitle{Trust Negotiation (cont.)}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.4]{img/trust-simple.png}
+\caption{Sơ đồ (đơn giản) của một mô hình Trust Negotiation}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Trust Negotiation (cont.) - Credential disclosure}
+Credential disclosure policy (CDP):
+\begin{itemize}
+\item Điều kiện để một bên công bố các thông tin.
+\item Bản thân một thông tin có thể có một số yếu tố nhạy cảm, nên được xem như một tài nguyên được bảo vệ.
+\item Bản thân CDP cũng là một đối tượng được bảo vệ.
+\end{itemize}
+\end{frame}
+
+\section{Một số frameworks trên thực tế}
 \begin{frame}
 \frametitle{Demo}
 \end{frame}
 
 \begin{frame}
 \frametitle{Một số vấn đề với Trust Negotiation}
-
+Một số vấn đề có thể kể đến\cite{10.1007/3-540-44875-6_20}
 \begin{itemize}
 \item Kiến trúc% \textit{Nên sử dụng các ứng dụng thứ ba?}
 \item Chiến thuật establishing trust
 \item Nhận và lưu credentials
 \item Khả năng mở rộng
-\item Tấn công\cite{10.1007/3-540-44875-6_20}
+\item Tấn công
 \item Xác thực nhiều đối tượng
 \end{itemize}
 \end{frame}
