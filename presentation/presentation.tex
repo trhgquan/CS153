@@ -6,6 +6,8 @@
 
 \addbibresource{presentation.bib}
 
+\newcommand{\eg}{\text{e.g.\ }}
+
 \begin{document}
 \author{Trần Hoàng Quân, Lê Hoàng Trọng Tín, Lê Mai Nguyên Thảo}
 \title{Trust Negotiations}
@@ -29,7 +31,7 @@
 \frametitle{Giới thiệu}
 Một ví dụ trong thế giới thực: Bạn đi siêu thị mua hàng và thanh toán bằng thẻ tín dụng.
 \begin{enumerate}
-\item Nhân viên thu ngân xác nhận thẻ của bạn là thẻ hợp lẹ (e.g kiểm tra format số thẻ, kiểm tra 4 số security code, kiểm tra thẻ có bị chỉnh sửa tẩy xóa, ..etc).
+\item Nhân viên thu ngân xác nhận thẻ của bạn hợp lệ (\eg kiểm tra format số thẻ, kiểm tra 4 số security code, kiểm tra thẻ có bị chỉnh sửa tẩy xóa, ..etc).
 \item Nhân viên thu ngân yêu cầu chủ thẻ nhập PIN và nhập số tiền.
 \item Nhân viên thu ngân in biên lai và đưa bạn kí.
 \item Nhân viên xác nhận chữ kí của bạn giống chữ kí phía sau thẻ, vậy là đã thanh toán thành công.
@@ -43,7 +45,7 @@ Giao dịch trong ví dụ trên có sự trao đổi thông tin (credentials) g
 Mục đích cuối cùng của Trust Negotiation:
 \begin{itemize}
 \item Thiết lập sự tin cậy (Trust Establishment) giữa các bên tham gia.
-\item Dù trao đổi nhiều thông tin (credentials) với nhau, các thông tin này phải được giữ an toàn.
+\item Dù trao đổi nhiều thông tin (credentials) với nhau, credentials phải được giữ an toàn.
 \end{itemize}
 \end{frame}
 
@@ -55,7 +57,7 @@ Trust Establishment: thiết lập sự tin cậy giữa những "người lạ"
 \item Client và Server không cùng security domain.
 \item Quyết định cấp quyền truy cập dựa vào thuộc tính (attribute), không dựa vào danh tính (identity).
 \begin{itemize}
-\item E.g: Quyền của client trong tổ chức, loại ngành nghề, chức vụ, ..etc
+\item \eg Quyền của client trong tổ chức, loại ngành nghề, chức vụ, ..etc
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -81,11 +83,11 @@ Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy c�
 
 \begin{frame}
 \frametitle{Trust Negotiation (cont.) - Digital Credentials}
-Digital Credentials: chứa các thuộc tính thông tin của người sớ hữu, được cấp bởi một bên đáng tin cậy (thường là nhà cung cấp chứng thư số).
+Digital Credentials: chứa các thuộc tính thông tin của người sở hữu, được cấp bởi một bên đáng tin cậy (thường là nhà cung cấp chứng thư số).
 \begin{itemize}
 \item Khó làm giả.
 \item Dễ xác thực.
-\item Ký bằng khóa PKI (public-key infrastructure, e.g chuẩn X.509 v3)
+\item Ký bằng khóa PKI (public-key infrastructure, \eg chuẩn X.509 v3)
 \end{itemize}
 \end{frame}
 
@@ -94,7 +96,7 @@ Digital Credentials: chứa các thuộc tính thông tin của người sớ h�
 Credential disclosure policy (CDP):
 \begin{itemize}
 \item Điều kiện để một bên công bố credentials.
-\item Bản thân credentials có thể có một số yếu tố nhạy cảm, nên được xem như một tài nguyên được bảo vệ.
+\item Bản thân credentials có thể có một số thông tin nhạy cảm, nên cũng được xem là một tài nguyên được bảo vệ.
 \item Bản thân CDP cũng là một đối tượng được bảo vệ.
 \end{itemize}
 \end{frame}
@@ -111,19 +113,6 @@ Các yếu tố cần thiết cho một hệ thống Trust Management:
 \end{itemize}
 \end{frame}
 
-\section{Một số frameworks trên thực tế}
-\begin{frame}
-\frametitle{Trust Negotiation (cont.)}
-Một số hệ thống trên thực tế:
-\begin{itemize}
-\item Keynote trust management system
-\item Trust Establishment phát triển bởi Haifa Research lab
-\item Trust Builder
-\item Unipro
-\item Trust-X
-\end{itemize}
-\end{frame}
-
 \begin{frame}
 \frametitle{Một số vấn đề với Trust Negotiation}
 Một số vấn đề có thể kể đến\cite{10.1007/3-540-44875-6_20}
@@ -136,6 +125,48 @@ Một số vấn đề có thể kể đến\cite{10.1007/3-540-44875-6_20}
 \item Xác thực nhiều đối tượng
 \end{itemize}
 \end{frame}
+
+\begin{frame}
+\frametitle{Trust Negotiation (cont.)}
+Một số hệ thống trên thực tế:
+\begin{itemize}
+\item Keynote trust management system
+\item Trust Establishment phát triển bởi Haifa Research lab
+\begin{itemize}
+\item Trust Policy Language (TPL)
+\end{itemize}
+\item TrustBuilder
+\item Unipro
+\item Trust-X
+\end{itemize}
+\end{frame}
+
+\section{Một số frameworks trên thực tế}
+\subsection{ATNAC}
+\begin{frame}
+\frametitle{ATNAC}
+Adaptive Trust Negotiation and Access Control (ATNAC)\cite{10.1145/1063979.1064004}: kiến trúc kiểm soát truy cập cho các dịch vụ điện tử, kết hợp của hai hệ thống:
+\begin{itemize}
+\item TrustBuilder: Xác định cách thức tiết lộ thông tin nhạy cảm.
+\item GAA-API: Kiểm soát truy cập một cách thích ứng.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{ATNAC (cont.) - Trust Builder}
+TrustBuilder: Là hệ thống Trust Negotiation phát triển bởi Đại học Brigham Young (BYU) và Đại học Illinois Urbana-Champaign (UIUC):
+\begin{itemize}
+\item Dễ bị tấn công DoS (denial of service - từ chối dịch vụ).
+\begin{itemize}
+\item Số lượng lớn session Trust Negotiation được gởi lên server.
+\item Server phải tính toán policy rất phức tạp.
+\item Server phải tính toán credentials không liên quan hoặc không hợp lệ.
+\end{itemize}
+\item Các cuộc tấn công thường nhắm vào thông tin nhạy cảm.
+\end{itemize}
+\end{frame}
+
+\subsection{Trust-X}
 
 \begin{frame}
 \frametitle{Tài liệu}
