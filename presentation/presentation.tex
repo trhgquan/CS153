@@ -14,9 +14,9 @@
 \institute{Trường Đại học Khoa học tự nhiên - ĐHQG HCM \\ Khoa Công nghệ Thông tin}
 %\date{}
 %\setbeamercovered{transparent}
-\setbeamertemplate{navigation symbols}{}
+%\setbeamertemplate{navigation symbols}{}
 \begin{frame}[plain]
-	\maketitle
+\maketitle
 \end{frame}
 
 \begin{frame}
@@ -29,8 +29,8 @@
 \frametitle{Giới thiệu}
 Một ví dụ trong thế giới thực: Bạn đi siêu thị mua hàng và thanh toán bằng thẻ tín dụng.
 \begin{enumerate}
-\item Nhân viên thu ngân xác nhận thẻ của bạn là thẻ thật (e.g tìm và xác nhận hologram in trước thẻ).
-\item Nhân viên thu ngân quẹt thẻ để xác nhận thẻ chưa bị khóa \& còn đủ tiền để mua hàng.
+\item Nhân viên thu ngân xác nhận thẻ của bạn là thẻ hợp lẹ (e.g kiểm tra format số thẻ, kiểm tra 4 số security code, kiểm tra thẻ có bị chỉnh sửa tẩy xóa, ..etc).
+\item Nhân viên thu ngân yêu cầu chủ thẻ nhập PIN và nhập số tiền.
 \item Nhân viên thu ngân in biên lai và đưa bạn kí.
 \item Nhân viên xác nhận chữ kí của bạn giống chữ kí phía sau thẻ, vậy là đã thanh toán thành công.
 \end{enumerate}
@@ -52,9 +52,11 @@ Mục đích cuối cùng của Trust Negotiation:
 \frametitle{Trust Establishment}
 Trust Establishment: thiết lập sự tin cậy giữa những "người lạ" trong hệ thống mở:
 \begin{itemize}
-\item Client và Server không cùng security domain (e.g có cơ chế bảo mật khác nhau).
+\item Client và Server không cùng security domain.
 \item Quyết định cấp quyền truy cập dựa vào thuộc tính (attribute), không dựa vào danh tính (identity).
-\item Quyền của client phụ thuộc vào tổ chức của client.
+\begin{itemize}
+\item E.g: Quyền của client trong tổ chức, loại ngành nghề, chức vụ, ..etc
+\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -62,8 +64,8 @@ Trust Establishment: thiết lập sự tin cậy giữa những "người lạ"
 \frametitle{Trust Negotiation}
 Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy cập và xác thực, cho phép người yêu cầu tài nguyên (resource requesters) và nhà cung cấp (providers) thiết lập sự tin cậy trong các hệ thống mở, dựa trên các thuộc tính (attributes) hơn là danh tính (identity).
 \begin{itemize}
-\item Trao đổi các thông tin điện tử giữa các bên một cách tuần tự.
-\item Đầu tiên trao đổi các thông tin ít nhạy cảm, khi độ tin cậy tăng thì trao đổi các thông tin nhạy cảm hơn.
+\item Trao đổi digital credentials giữa các bên một cách tuần tự.
+\item Đầu tiên trao đổi credentials ít nhạy cảm, khi độ tin cậy tăng thì trao đổi credentials nhạy cảm hơn.
 \end{itemize}
 \end{frame}
 
@@ -78,18 +80,48 @@ Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy c�
 \end{frame}
 
 \begin{frame}
+\frametitle{Trust Negotiation (cont.) - Digital Credentials}
+Digital Credentials: chứa các thuộc tính thông tin của người sớ hữu, được cấp bởi một bên đáng tin cậy (thường là nhà cung cấp chứng thư số).
+\begin{itemize}
+\item Khó làm giả.
+\item Dễ xác thực.
+\item Ký bằng khóa PKI (public-key infrastructure, e.g chuẩn X.509 v3)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
 \frametitle{Trust Negotiation (cont.) - Credential disclosure}
 Credential disclosure policy (CDP):
 \begin{itemize}
-\item Điều kiện để một bên công bố các thông tin.
-\item Bản thân một thông tin có thể có một số yếu tố nhạy cảm, nên được xem như một tài nguyên được bảo vệ.
+\item Điều kiện để một bên công bố credentials.
+\item Bản thân credentials có thể có một số yếu tố nhạy cảm, nên được xem như một tài nguyên được bảo vệ.
 \item Bản thân CDP cũng là một đối tượng được bảo vệ.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Trust Negotiation (cont.) - Requirements}
+Các yếu tố cần thiết cho một hệ thống Trust Management:
+\begin{itemize}
+\item Quyền sở hữu đối với credential.
+\item Tính hợp lệ của credential.
+\item Cơ chế bảo vệ quyền riêng tư.
+\item Hỗ trợ các chiến thuật thương lượng thay thế.
+\item Các chiến thuật thương lượng nhanh.
 \end{itemize}
 \end{frame}
 
 \section{Một số frameworks trên thực tế}
 \begin{frame}
-\frametitle{Demo}
+\frametitle{Trust Negotiation (cont.)}
+Một số hệ thống trên thực tế:
+\begin{itemize}
+\item Keynote trust management system
+\item Trust Establishment phát triển bởi Haifa Research lab
+\item Trust Builder
+\item Unipro
+\item Trust-X
+\end{itemize}
 \end{frame}
 
 \begin{frame}
