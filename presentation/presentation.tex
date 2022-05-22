@@ -79,7 +79,7 @@ Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy c�
 \begin{frame}{Trust Negotiation (cont.) - Digital Credentials}
 Digital Credentials: chứa các thuộc tính thông tin của người sở hữu, được cấp bởi một bên đáng tin cậy (thường là nhà cung cấp chứng thư số).
 \begin{itemize}
-\item Khó làm giả.
+\item Không thể làm giả.
 \item Dễ xác thực.
 \item Ký bằng PKI (public-key infrastructure, \eg chuẩn X.509 v3)
 \end{itemize}
@@ -97,11 +97,15 @@ Credential disclosure policy (CDP):
 \begin{frame}{Trust Negotiation (cont.) - Requirements}
 Các yếu tố cần thiết cho một hệ thống Trust Management:
 \begin{itemize}
-\item Quyền sở hữu đối với credential.
+\item Quyền sở hữu credential.
 \item Tính hợp lệ của credential.
+\item Khám phá credential chain.
 \item Cơ chế bảo vệ quyền riêng tư.
-\item Hỗ trợ các chiến thuật thương lượng thay thế.
-\item Các chiến thuật thương lượng nhanh.
+\item Hỗ trợ các chiến thuật negotiate thay thế.
+\begin{itemize}
+\item \eg Tăng cường bảo mật, tối ưu tính toán, ..etc
+\end{itemize}
+\item Các chiến thuật negotiate nhanh.
 \end{itemize}
 \end{frame}
 
@@ -373,7 +377,6 @@ Xem xét ví dụ về một công ty cho thuê xe (tạm gọi là công ty R):
 \end{figure}
 \end{frame}
 
-\subsection{Tổng kết}
 \begin{frame}{Tổng kết}
 ATNAC:
 \begin{itemize}
