@@ -16,7 +16,7 @@
 \institute{Trường Đại học Khoa học tự nhiên - ĐHQG HCM \\ Khoa Công nghệ Thông tin}
 %\date{}
 %\setbeamercovered{transparent}
-%\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{navigation symbols}{}
 \begin{frame}[plain]
 \maketitle
 \end{frame}
@@ -60,7 +60,7 @@ Trust Establishment: thiết lập sự tin cậy giữa những "người lạ"
 \end{frame}
 
 \begin{frame}{Trust Negotiation}
-Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy cập (access control) và xác thực (authentication), cho phép người yêu cầu tài nguyên (resource requesters) và nhà cung cấp (providers) thiết lập sự tin cậy trong các hệ thống mở, dựa trên các thuộc tính (attributes) hơn là danh tính (identity).
+Trust Negotiation: phuơng pháp tiếp cận bằng cách kiểm soát truy cập (access control) và xác thực (authentication), cho phép người yêu cầu tài nguyên (Resource Requesters) và nhà cung cấp (Providers) thiết lập sự tin cậy trong các hệ thống mở, dựa trên các thuộc tính (attributes) hơn là danh tính (identity).
 \begin{itemize}
 \item Trao đổi digital credentials giữa các bên một cách tuần tự.
 \item Đầu tiên trao đổi credentials ít nhạy cảm, khi độ tin cậy tăng thì trao đổi credentials nhạy cảm hơn.
@@ -155,10 +155,10 @@ GAA-API: Generic Authorization and Access-control API
 
 \begin{frame}{ATNAC (cont.) - GAA-API}
 \begin{figure}
-    \centering
-    \includegraphics[scale=.5]{img/gaa-api.png}
-    \caption{Sơ đồ hệ thống với GAA-API middleware}
-    \label{fig:gaa_api}
+\centering
+\includegraphics[scale=.5]{img/gaa-api.png}
+\caption{Sơ đồ hệ thống với GAA-API middleware}
+\label{fig:gaa_api}
 \end{figure}
 \end{frame}
 
@@ -198,9 +198,9 @@ Chức năng từng phần của ATNAC:
 \end{frame}
 
 \begin{frame}{ATNAC (cont.) - Suspicion Level}
-Mức nghi ngờ (Suspicion level) đánh giá khả năng một requester đang thực hiện hành động không phù hợp. Mỗi requester của một service có một Suspicion Level riêng biệt. Gồm 3 thành phần chính:
+Mức nghi ngờ (Suspicion level) đánh giá khả năng một Requester đang thực hiện hành động không phù hợp. Mỗi Requester của một service có một Suspicion Level riêng biệt. Gồm 3 thành phần chính:
 \begin{itemize}
-\item $S_\text{DOS}$: Khả năng requester đang thực hiện tấn công DoS.
+\item $S_\text{DOS}$: Khả năng Requester đang thực hiện tấn công DoS.
 \item $S_\text{IL}$: Rò rỉ thông tin (information leakage).
 \item $S_\text{O}$: Các hành vi còn lại.
 \end{itemize}
@@ -209,9 +209,9 @@ Suspicion Level tăng khi một sự kiện đáng nghi xảy ra, giảm khi m�
 
 \begin{frame}{ATNAC (cont.) - Cách hoạt động}
 \begin{itemize}
-\item Analyzer xác định các requesters gởi một số lượng request tương đồng cao bất thường và tăng $S_\text{DOS}$.
+\item Analyzer xác định các Requesters gởi một số lượng request tương đồng cao bất thường và tăng $S_\text{DOS}$.
 \item Trong quá trình trust negotiation, credentials gởi bởi client phải trùng với credentials hệ thống yêu cầu, nếu không $S_\text{DOS} = 1$.
-\item Nếu $S_\text{DOS}, S_\text{IL}$ hoặc $S_\text{O} > 0.9$, hệ thống sẽ dùng firewall chặn requester.
+\item Nếu $S_\text{DOS}, S_\text{IL}$ hoặc $S_\text{O} > 0.9$, hệ thống sẽ dùng firewall chặn Requester.
 \item Nếu $S_\text{IL} > \textit{một ngưỡng nhất định}$, TrustBuilder sẽ áp các chính sách nghiêm ngặt hơn với credentials, nhất là các credentials nhạy cảm.
 \item Khi $S_\text{IL}$ tăng, GAA-API dùng các access control policies chặt chẽ hơn.
 \end{itemize}
@@ -221,18 +221,18 @@ Suspicion Level tăng khi một sự kiện đáng nghi xảy ra, giảm khi m�
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{figure}
-    \centering
-    \includegraphics[scale=.4]{img/atnac-example-1.png}
-    \caption{Credentials và Policies của client và server}
-    \label{fig:atnac-1}
+\centering
+\includegraphics[scale=.4]{img/atnac-example-1.png}
+\caption{Credentials và Policies của client và server}
+\label{fig:atnac-1}
 \end{figure}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{figure}
-    \centering
-    \includegraphics[scale=.4]{img/atnac-example-2.png}
-    \caption{Access control policy}
-    \label{fig:atnac-2}
+\centering
+\includegraphics[scale=.4]{img/atnac-example-2.png}
+\caption{Access control policy}
+\label{fig:atnac-2}
 \end{figure}
 \end{column}
 \end{columns}
@@ -246,7 +246,7 @@ Trust-X: P2P framework dành cho Trust Establishment\cite{10.1109/TKDE.2004.1318
 \item Thiết kế cho môi trường P2P.
 \begin{itemize}
 \item Mỗi bên chịu trách nhiệm tương đương trong quản lý thương lượng (negotiation management).
-\item Bên nào cũng có thể là requester hoặc controller của một resource.
+\item Bên nào cũng có thể là Requester hoặc Controller của một resource.
 \end{itemize}
 \item X-TNL: Ngôn ngữ đặc tả các chứng chỉ và policies dựa trên nền XML.
 \end{itemize}
@@ -259,21 +259,142 @@ Trust-X: P2P framework dành cho Trust Establishment\cite{10.1109/TKDE.2004.1318
 \item Credentials: Thể hiện đặc điểm của chủ sở hữu, được công nhận bởi CA (certificate authority).
 \item Declarations: Chứa thông tin của chủ sở hữu, không cần được chứng nhận.
 \end{itemize}
-\item Trust tickets (X-TNL): dùng để tăng tốc quá trình negotiation khi đã được cấp quyền truy cập trong lần negotiation trước.
-\item Negotiation tiến hành theo từng giai đoạn.
+\item Trust tickets (X-TNL): dùng để tăng tốc quá trình negotiate khi đã được cấp quyền truy cập trong lần negotiate trước.
+\item Negotiation tiến hành theo từng giai đoạn (phase):
+\begin{itemize}
+\item Introductory phase
+\item Policy Evaluation phase
+\item Certificate Exchange phase
+\end{itemize}
 \end{itemize}
 \end{frame}
+
+\begin{frame}{Trust-X (cont.) - X-TNL}
+\begin{columns}
+\begin{column}{.5\textwidth}
+\begin{figure}
+\centering
+\includegraphics[scale=.3]{img/trustx-credential.PNG}
+\caption{Credential XML}
+\label{fig:trust_x_credential}
+\end{figure}
+\end{column}
+\begin{column}{.5\textwidth}
+\begin{figure}
+\centering
+\includegraphics[scale=.3]{img/trustx-declaration.PNG}
+\caption{Declaration XML}
+\label{fig:trust_x_declaration}
+\end{figure}
+\end{column}
+\end{columns}
+
+\end{frame}
+
 
 \begin{frame}{Trust-X (cont.) - Kiến trúc}
 \begin{figure}
 \centering
 \includegraphics[scale=.5]{img/trust-x-architecture.PNG}
-\caption{Kiến trúc mô hình Trust-X}
+\caption{Kiến trúc Trust-X framework}
 \label{fig:trust_x_architecture}
 \end{figure}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Introduction phase}
+Introduction phase:
+\begin{itemize}
+\item Bắt đầu khi Requester yêu cầu Controller cung cấp tài nguyên $\mathcal{R}$. 
+\item Hai bên trao đổi với nhau bằng một số thông điệp ngắn.
+\item Được quy định bởi các chính sách giới thiệu (introductory policies) của hai bên. Introductory policy được dùng để xác nhận các thuộc tính cần thiết cho các bước negotiate sau này.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Ví dụ Introduction phase}
+Xét ví dụ một cửa hàng cho thuê xe. Alice muốn thuê một chiếc xe từ cửa hàng này và bắt đầu quá trình negotiate. Những điều kiện mà cửa hàng có thể yêu cầu trong introduction phase được biểu diễn bởi các introductory policies sau:
+\begin{itemize}
+\item Car\_Rental$_{p} \leftarrow $ Preferred\_Customer()
+\item Car\_Rental$_{p} \leftarrow $ Car\_Preferences()
+\end{itemize}
+Policy đầu tiên kiểm tra khách hàng có \textit{preferred customer} credential thể hiện trước đó đã có giao dịch giữa hai bên. Policy thứ hai yêu cầu khách hàng gởi \texttt{car\_preferences} declaration để có thể chọn các loại xe phù hợp với yêu cầu của khách hàng.
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Policy Evaluation phase}
+Policy Evaludation phase:
+\begin{itemize}
+\item Client và server trao đổi các disclosure policies áp dụng cho các tài nguyên liên quan.
+\item Policy Evaluation phase được thực hiện bởi Compliance Checker
+\item Sử dụng cấu trúc cây Tree Manager để quản lí và cập nhật.
+\item \textbf{Không chứng chỉ nào được công bố trong phase này}. Mục tiêu của phase là xác định chuỗi các chứng chỉ phù hợp với disclosure policy của cả server và client khi phát hành tài nguyên.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Certificate Exchange phase}
+Certificate Exchange phase:
+\begin{itemize}
+\item Mỗi bên công bố chứng chỉ của mình theo thứ tự xác định trong phase trước. Bên còn lại xác thực chứng chỉ hợp lệ.
+\item Nếu không có vấn đề, phase kết thúc và tài nguyên được phát hành.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Certificate Exchange phase}
+\begin{figure}
+\centering
+\includegraphics[scale=.5]{img/cert-exchange.PNG}
+\caption{Ví dụ cho Certificate Exchange phase}
+\label{fig:cert-exchange}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Ví dụ}
+Xem xét ví dụ về một công ty cho thuê xe (tạm gọi là công ty R):
+\begin{itemize}
+\item Nhân viên công ty \emph{Corrier} được miễn phí
+\item Công ty R biết các nhân viên công ty \emph{Corrier} và có bản mềm bằng lái xe của mỗi người. Vì vậy, công ty R chỉ yêu cầu nhân viên trình thẻ công ty và một bản sao chứng minh thư hợp lệ để xác nhận đúng người.
+\item Ngược lại, người lạ phải trả tiền để thuê xe và phải nộp bản mềm bằng lái \& thẻ tín dụng hợp lệ.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Ví dụ}
+\begin{figure}
+\centering
+\includegraphics[scale=.5]{img/policy.png}
+\caption{Hình thức hóa các policies trong ví dụ}
+\label{fig:policy-formal}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Trust-X (cont.) - Negotiation}
+\begin{figure}
+\centering
+\includegraphics[scale=.5]{img/trustx-architecture.png}
+\caption{Trust-X negotiation flow diagram}
+\label{fig:trust-x-architecture}
+\end{figure}
+\end{frame}
+
+\subsection{Tổng kết}
+\begin{frame}{Tổng kết}
+ATNAC:
+\begin{itemize}
+\item Chống DoS
+\item Tự động điều chỉnh security policies dựa trên Suspicion Level
+\item Giám sát rò rỉ thông tin nhạy cảm.
+\end{itemize}
+Trust-X:
+\begin{itemize}
+\item P2P
+\item Sử dụng X-TNL
+\end{itemize}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Tài liệu}
 \printbibliography
 \end{frame}
+
+\begin{frame}{}
+\centering \Large
+\emph{Fin}
+\end{frame}
+
 \end{document}
