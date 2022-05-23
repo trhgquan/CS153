@@ -27,7 +27,7 @@ Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
 
 \newcommand{\coursename}{Mã hóa ứng dụng - CSC15003}
 \newcommand{\reportname}{Trust Negotiation}
-\newcommand{\trustx}{$\mathcal{\text{Trust-}X}$}
+\newcommand{\trustx}{$\mathcal{\text{Trust-}X}$\ }
 
 \begin{document}
 
@@ -278,7 +278,7 @@ Tương ứng với credentials của ATNAC, nhưng gồm hai loại:
 \trustx có ba phase:
 \begin{itemize}
 \item Introduction phase: trao đổi bằng các thông điệp ngắn, quy định bởi các chính sách giới thiệu (introductory policies) của hai bên. Mục tiêu của phase là xác định các thuôc tính cần thiết cho các bước negotiate tiếp theo.
-\item Policy Exchange phase: trao đổi các chính sách tiết lộ (disclosure policies) áp dụng cho các resources liên quan. Phase này thực hiện ở Compliance Checker. Quan trọng là phase \textbf{chỉ trao đổi các policies}, \textbf{không trao đổi các certificate}. Mục tiêu của phase là xác định chuỗi các certificates phù hợp với disclosure policies của cả server và client khi release resource.
+\item Policy Evaluation phase: trao đổi các chính sách tiết lộ (disclosure policies) áp dụng cho các resources liên quan. Phase này thực hiện ở Compliance Checker. Quan trọng là phase \textbf{chỉ trao đổi các policies}, \textbf{không trao đổi các certificate}. Mục tiêu của phase là xác định chuỗi các certificates phù hợp với disclosure policies của cả server và client khi release resource.
 \item Certificate Exchange phase: các bên công bố các certificate của mình, bên còn lại xác minh, tuần tự theo thứ tự đã có ở Policy Exchange phase. Resource được release khi không có vấn đề xảy ra.
 \end{itemize}
 
