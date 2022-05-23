@@ -207,7 +207,7 @@ Một ví dụ cụ thể:
 
 \includegraphics[scale=.5]{img/atnac-example-2.png}
 \end{multicols}
-\caption{Credentials, Policies và Access Control Policy}
+\caption{Credentials, Policies và Access Control Policy của một trang thương mại điện tử.}
 \end{figure}
 
 Xét trường hợp khách hàng muốn mua món đồ với giá > \$500. Khi đó:
@@ -219,12 +219,12 @@ Xét trường hợp khách hàng muốn mua món đồ với giá > \$500. Khi 
 Có thể thấy, Suspicion Level càng cao thì policy áp dụng lên càng phức tạp.
 
 \subsubsection{Mô hình ATNAC}
-ATNAC kết hợp mô hình TrustBuilder và hệ thống GAA-API để lấp đấy khiếm khuyết của mỗi hệ thống. Khi đó, chi phí tính toán của quá trình Trust Negotiation sẽ được tối ưu, hạn chế các cuộc tấn công vào hệ thống. ATNAC cũng sẽ hỗ trợ các chính sách thích ứng chi tiết. Kiến trúc cụ thể của ATNAC như hình dưới:
+ATNAC kết hợp hai hệ thống TrustBuilder và GAA-API để bổ sung khuyết điêm của mỗi hệ thống. Khi đó, chi phí tính toán của quá trình Trust Negotiation sẽ được tối ưu, hạn chế các cuộc tấn công vào hệ thống. ATNAC cũng sẽ hỗ trợ các chính sách thích ứng chi tiết. Kiến trúc cụ thể của ATNAC như hình dưới:
 
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.7]{img/atnac.png}
-\caption{Kiến trúc ATNAC framework}
+\caption{Kiến trúc mô hình ATNAC}
 \end{figure}
 Một session thể hiện quá trình Trust Negotiation sẽ gồm các giai đoạn:
 \begin{itemize}
@@ -235,8 +235,19 @@ Một session thể hiện quá trình Trust Negotiation sẽ gồm các giai đ
 \item (5): Analyzer lưu lại thông tin các Requester có hành vi đáng ngờ vào Suspicion Database để tiện truy xuất.
 \end{itemize}
 
+\subsubsection{Tổng kết}
+Một số đặc điểm của mô hình ATNAC có thể kể đến như:
+\begin{itemize}
+\item Hạn chế các cuộc tấn công DoS, gây rò rỉ dữ liệu.
+\item Linh hoạt áp dụng các policies đối với từng đối tượng ở các mức Suspicion Level khác nhau.
+\end{itemize}
+Một số nhược điểm của ATNAC có thể kể đến:
+\begin{itemize}
+\item Số lượng policy áp dụng có thể tăng dần khi Suspision Level tăng, số luợng credentials có thể nhiều hơn mức bình thường cho quá trình negotiation.
+\end{itemize}
+
 \subsection{\trustx}
-\trustx\cite{10.1109/TKDE.2004.1318565} là một kiến trúc thiết kế riêng cho môi trường P2P (Peer-to-Peer). Hệ thống thiết kế dựa trên nền XML, sử dụng ngôn ngữ X-TNL để đặc tả các policies và certificates. 
+\trustx\cite{10.1109/TKDE.2004.1318565} là một kiến trúc thiết kế riêng cho môi trường P2P (Peer-to-Peer), trong đó các bên có thể vừa đống vai trò là Requester hoăc Controller. Hệ thống thiết kế dựa trên nền XML, sử dụng ngôn ngữ X-TNL để đặc tả các policies và certificates. 
 
 \begin{figure}[H]
 \centering
@@ -247,7 +258,7 @@ Một session thể hiện quá trình Trust Negotiation sẽ gồm các giai đ
 Mô hình có các đặc điểm đáng chú ý sau:
 
 \subsubsection{Certificates}
-Tương ứng với credentials của ATNAC, nhưng gồm 2 loại:
+Tương ứng với credentials của ATNAC, nhưng gồm hai loại:
 \begin{itemize}
 \item Credentials: Mang các thuộc tính của chủ sở hữu, được công nhận bởi CA.
 \item Declarations: Mang các thông tin của chủ sỡ hữu, không cần công nhận.
@@ -274,13 +285,24 @@ Tương ứng với credentials của ATNAC, nhưng gồm 2 loại:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=.8]{img/trustx-architecture.png}
-\caption{Flowchart quá trình \trustx negotiation}
+\caption{Flowchart quá trình negotiation ở mô hình \trustx}
 \end{figure}
 
-Các module Trust Ticker, Sequence Prediction nhằm làm tăng tốc quá trình.
+Các module Trust Ticker, Sequence Prediction nhằm làm tăng tốc quá trình. Các policies được lưu trong một cấu trúc dữ liệu cây nhằm làm tăng tốc quá trình tìm kiếm và cập nhật.
+
+\subsubsection{Tổng kết}
+Một số đặc điểm của mô hình \trustx có thể kể đến:
+\begin{itemize}
+\item Tốc độ nhanh
+\item Phân biệt riêng các phase trao đổi policy và certificate, từ đó không yêu cầu client cung cấp thêm thông tin như ATNAC.
+\end{itemize}
+Song song với đó là một số nhược điểm
+\begin{itemize}
+\item Lưu certificates dưới dạng XML, thân thiện với con người nhưng đôi khi có thể gây tác dụng ngược (rò rỉ thông tin, thông tin lại dễ đọc).
+\end{itemize}
 
 \section{Tổng kết}
-
+Có nhiều mô hình ứng dụng Trust Negotiation, trong đó đặc biệt là các mô hình ATNAC (ứng dụng TrustBuilder) và \trustx. Mỗi mô hình có các ưu khuyết điểm riêng, từ đó phải cân nhắc sử dụng trong từng môi trường, đặc tính kĩ thuật khác nhau.
 
 \addcontentsline{toc}{section}{Tài liệu}
 \bibliographystyle{plain}
