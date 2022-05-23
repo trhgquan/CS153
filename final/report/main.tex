@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue, citecolor=red]{hyperref}
+\usepackage{url}
+\usepackage{parskip}
+\usepackage[top=.75in, left=.5in, right=.5in, bottom=1in]{geometry}
+\usepackage[utf8]{vietnam}
+\setlength{\headheight}{29.43912pt}
+
+% \graphicspath{PATH_TO_GRAPHIC_FOLDER}
+
+\pagestyle{fancy}
+\lhead{
+\reportname
+}
+\rhead{
+Trường Đại học Khoa học Tự nhiên - ĐHQG HCM\\
+\coursename
+}
+\lfoot{\LaTeX\ by \href{https://github.com/trhgquan}{Quan, Tran Hoang}}
+
+\newcommand{\coursename}{Mã hóa ứng dụng - CSC15003}
+\newcommand{\reportname}{Trust Negotiation}
+\newcommand{\trustx}{$\mathcal{\text{Trust-}X}$}
+
+\begin{document}
+
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\centering
+
+\textsc{\LARGE đại học quốc gia tphcm}\\[1.5cm]
+\textsc{\Large trường đại học khoa học tự nhiên}\\[0.5cm]
+\textsc{\large khoa công nghệ thông tin}\\[0.5cm]
+\textsc{bộ môn công nghệ tri thức}\\[0.5cm]
+
+\HRule \\[0.4cm]
+{ 
+\huge{\bfseries{Báo cáo Đồ án cuối kì}}\\[0.5cm]
+\large{\bfseries{Đề tài: \reportname}}
+}\\[0.4cm]
+\HRule \\[0.5cm]
+
+\textbf{\large Môn học: \coursename}\\[0.5cm]
+
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Sinh viên thực hiện:}\\
+Trần Hoàng Quân \textsc{(19120338)}\\
+Lê Hoàng Trọng Tín \textsc{(19120682)}\\
+Lê Mai Nguyên Thảo \textsc{(19120661)}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushright} \large
+\emph{Giáo viên hướng dẫn:} \\
+% Dr. James \textsc{Smith}
+Thầy Trương Toàn Thịnh
+\end{flushright}
+\end{minipage}\\[2cm]
+
+{\large \today}\\[2cm]
+
+\includegraphics[scale=.25]{img/hcmus-logo.png}\\[1cm]
+
+\vfill
+\end{titlepage}
+	
+\tableofcontents
+\pagebreak
+
+\section{Trust Negotiation}
+\subsection{Bài toán thực tế}
+Xét qui trình thanh toán bằng thẻ tín dụng (hoặc thẻ NAPAS) ở siêu thị như sau:
+\begin{enumerate}
+\item Nhân viên thu ngân kiểm tra thẻ có hợp lệ hay không
+\item Nhân viên thu ngân quẹt thẻ vào máy POS và cho khách hàng nhập mã PIN, số tiền.
+\item Nhân viên thu ngân xác nhận thanh toán và in biên lai cho khách hàng ký.
+\item Nhân viên thu ngân xác nhận chữ ký trên biên lai giống với chữ ký trên mặt sau của thẻ.
+\end{enumerate}
+Như ta đã biết, cách làm trên vẫn tiềm ẩn nhiều nguy cơ an ninh. Ví dụ, không phải ai cũng có kĩ năng cuyên môn để kiểm tra thẻ hợp lệ bằng mắt thường; không có gì đảm bảo nhân viên thu ngân không lợi dụng sơ hở của khách hàng để thay đổi số tiền, ..etc. Tuy tiềm ẩn nguy cơ, nhưng các giao dịch vẫn diễn ra hàng ngày vì sự tin tưởng của khách hàng với các tổ chức / nhãn hàng lớn.
+
+Trên không gian số cũng vậy, phải có cách để tạo dựng sự tin cậy trong các giao dịch, các kết nối online. Đây cũng là lí do các phương thức Trust Negotiation (tạm dịch: thương lượng tin cậy) ra đời. Giống với thực tế, Trust Negotiation phải đạt được các mục tiêu sau:
+\begin{itemize}
+\item Tạo dựng sự tin cậy giữa các bên tham gia.
+\item Dù trao đổi các thông tin xác thực với nhau, các thông tin này phải được giữ an toàn. 
+\end{itemize}
+
+\subsection{Trust Establishment (Thiết lập sự tin cậy)}
+
+
+\subsection{Digital Credentials (Thông tin xác thực số)}
+
+\subsection{Credential Disclosure Policy (CDP - Chính sách tiết lộ thông tin xác thực)}
+
+\section{Một số framework ứng dụng thực tế}
+\subsection{ATNAC}
+Adaptive Trust Negotiation and Access Control (ATNAC)
+
+\subsection{\trustx}
+
+\addcontentsline{toc}{section}{Tài liệu}
+\bibliographystyle{plain}
+\bibliography{sample}
+
+\end{document}
