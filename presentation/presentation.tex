@@ -252,13 +252,13 @@ Trust-X: P2P framework dành cho Trust Establishment\cite{10.1109/TKDE.2004.1318
 \item Mỗi bên chịu trách nhiệm tương đương trong quản lý thương lượng (negotiation management).
 \item Bên nào cũng có thể là Requester hoặc Controller của một resource.
 \end{itemize}
-\item X-TNL: Ngôn ngữ đặc tả các chứng chỉ và policies dựa trên nền XML.
+\item X-TNL: Ngôn ngữ đặc tả các certificate và policies dựa trên nền XML.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Trust-X (cont.)}
 \begin{itemize}
-\item Chứng chỉ: có 2 loại:
+\item Certificates: có 2 loại:
 \begin{itemize}
 \item Credentials: Thể hiện đặc điểm của chủ sở hữu, được công nhận bởi CA (certificate authority).
 \item Declarations: Chứa thông tin của chủ sở hữu, không cần được chứng nhận.
@@ -329,14 +329,14 @@ Policy Evaludation phase:
 \item Client và server trao đổi các disclosure policies áp dụng cho các tài nguyên liên quan.
 \item Policy Evaluation phase được thực hiện bởi Compliance Checker
 \item Sử dụng cấu trúc cây Tree Manager để quản lí và cập nhật.
-\item \textbf{Không chứng chỉ nào được công bố trong phase này}. Mục tiêu của phase là xác định chuỗi các chứng chỉ phù hợp với disclosure policy của cả server và client khi phát hành tài nguyên.
+\item \textbf{Không certificate nào được công bố trong phase này}. Mục tiêu của phase là xác định chuỗi các certificate phù hợp với disclosure policy của cả server và client khi phát hành tài nguyên.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Trust-X (cont.) - Certificate Exchange phase}
 Certificate Exchange phase:
 \begin{itemize}
-\item Mỗi bên công bố chứng chỉ của mình theo thứ tự xác định trong phase trước. Bên còn lại xác thực chứng chỉ hợp lệ.
+\item Mỗi bên công bố certificate của mình theo thứ tự xác định trong phase trước. Bên còn lại xác thực certificate hợp lệ.
 \item Nếu không có vấn đề, phase kết thúc và tài nguyên được phát hành.
 \end{itemize}
 \end{frame}
