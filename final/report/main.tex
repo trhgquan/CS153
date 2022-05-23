@@ -3,6 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{float}
+\usepackage{multicol}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage[colorlinks=true,linkcolor=blue, citecolor=red]{hyperref}
@@ -153,7 +154,7 @@ Một số hệ thống Trust Management có thể kể đến:
 Trong đó chúng ta đi sâu vào tìm hiểu các kiến trúc ATNAC và \trustx.
 
 \subsection{ATNAC}
-Adaptive Trust Negotiation and Access Control (ATNAC)\cite{10.1145/1063979.1064004}, là kiến trúc access control được ứng dụng vào các dịch vụ điện tử, sử dụng các hệ thống TrustBuilder và GAA-API.
+Adaptive Trust Negotiation and Access Control (ATNAC)\cite{10.1145/1063979.1064004}, là kiến trúc access control được ứng dụng vào các dịch vụ điện tử, sử dụng các hệ thống TrustBuilder và GAA-API. 
 
 \subsubsection{TrustBuilder}
 Được phát triển bởi Đại học Brigham Young (BYU) và Đại học Illinois Urbana-Champaign (UIUC). Hệ thống chỉ thực hiên qui trình Trust Negotiation, tuy nhiên có nhiều khuyết điểm:
@@ -169,10 +170,117 @@ Adaptive Trust Negotiation and Access Control (ATNAC)\cite{10.1145/1063979.10640
 Để khắc phục khuyết điểm này, ATNAC sử dụng middleware GAA-API.
 
 \subsubsection{GAA-API}
+Generic Authorization and Access-control API (GAA-API) là một middleware API, sử dụng cơ chế FGAC (Fine-grained access control - kiểm soát truy cập chi tiết). GAA-API có thể phát hiện và phản hồi lại các cuộc xâm nhập ở mức ứng dụng, có thể tương tác với các hệ thống IDS (Intrusion Detection System - hệ thống phát hiện xâm nhập) để thích ứng với các điều kiện đe dọa mạng.
 
+Cần lưu ý, GAA-API chỉ đóng vai trò kiểm soát truy cập, không tham gia vào quá trình Trust Negotiation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.5]{img/gaa-api.png}
+\caption{Sơ đồ hoạt động của GAA-API}
+\label{fig:gaa-api}
+\end{figure}
+
+\subsubsection{Suspicion Level}
+Suspicion Level đánh giá khả năng Requester đang thực hiên hành động không phù hợp, gồm ba yếu tố chính:
+\begin{itemize}
+\item $S_{DOS}$: Khả năng Requester đang thực hiện tấn công DoS.
+\item $S_{IL}$: Khả năng Requester đang cố gắng làm rò ri thông tin (information leakage).
+\item $S_{O}$: Các hành vi đáng ngờ khác.
+\end{itemize}
+
+Mỗi Requester có một Suspicion Level riêng. Suspicion Level tăng khi một sự kiện được đánh giá là "đáng ngờ" xảy ra, giảm khi các sự kiện được đánh giá là "tích cưc" xảy ra. Cụ thể:
+
+\begin{itemize}
+\item Analyzer của GAA-API xác định các Requesters gửi một số lượng lớn request có sự tương đồng bất thường, sau đó tăng $S_{DOS}$.
+\item Trong quá trình Trust Negotiation, nếu các credentials client gửi lên hệ thống không trùng với credentials hệ thống yếu cầu, $S_{DOS} = 1$.
+\item Nếu $S_{DOS}, S_{IL}$ hoặc $S_O > 0.9$, hệ thống sẽ kích hoạt firewall chặn Requester.
+\item Nếu $S_{IL} > threshold$, nghĩa là vượt quá ngưỡng $threshold$ nhất định, hệ thống sẽ xác định người dùng đang có ý định làm rò rỉ thông tin và sẽ áp dụng các policy nghiêm ngặt hơn với credentials. Tổng quát, $S_{IL}$ càng tăng thì các Access Control Policies được áp dụng sẽ càng chặt hơn.
+\end{itemize}
+
+Một ví dụ cụ thể:
+
+\begin{figure}[H]
+\centering
+\begin{multicols}{2}
+\includegraphics[scale=.5]{img/atnac-example-1.png}
+
+\includegraphics[scale=.5]{img/atnac-example-2.png}
+\end{multicols}
+\caption{Credentials, Policies và Access Control Policy}
+\end{figure}
+
+Xét trường hợp khách hàng muốn mua món đồ với giá > \$500. Khi đó:
+\begin{itemize}
+\item Nếu Suspicion Level ở mức low, policy chỉ yêu cầu credential C3.
+\item Nếu Suspicion Level ở mức medium, policy yêu cầu credential C3 và C4.
+\item Nếu Suspicion Level ở mức high, policy yêu cầu cung cấp credential C3, C4 và C5.
+\end{itemize}
+Có thể thấy, Suspicion Level càng cao thì policy áp dụng lên càng phức tạp.
+
+\subsubsection{Mô hình ATNAC}
+ATNAC kết hợp mô hình TrustBuilder và hệ thống GAA-API để lấp đấy khiếm khuyết của mỗi hệ thống. Khi đó, chi phí tính toán của quá trình Trust Negotiation sẽ được tối ưu, hạn chế các cuộc tấn công vào hệ thống. ATNAC cũng sẽ hỗ trợ các chính sách thích ứng chi tiết. Kiến trúc cụ thể của ATNAC như hình dưới:
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.7]{img/atnac.png}
+\caption{Kiến trúc ATNAC framework}
+\end{figure}
+Một session thể hiện quá trình Trust Negotiation sẽ gồm các giai đoạn:
+\begin{itemize}
+\item Service Requester gửi service request lên Service Provider (1), Provider sau đó chuyển cho GAA-API xử lí. API sẽ đánh giá các access control policies kiểm soát quyền truy cập của service đó. Các policies sau đó cũng đưa ra danh sách các credentials cần thiết để thỏa yêu cầu, các credentials này còn tùy thuộc vào độ nhạy cảm, mức độ đe dọa (threat level) và suspicion level của Requester.
+\item GAA-API sẽ dùng các credentials này để đánh giá và đưa ra quyết định chấp nhận hay từ chối request (6). Trường hợp credential chưa có hoặc threat level quá cao, API sẽ yêu cầu Requester cung cấp thêm credentials (2.1). Cùng lúc đó, Analyzer sẽ tính toán Suspicion Level của Requester, sau đó GAA-API chuyển danh sách credentials và Suspicion Level cho TrustBuilder (2.2).
+\item Requester nhận yêu cầu cung cấp thêm credentials (2.1) và bắt đầu giai đoạn Trust Negotiation (3.1) với TrustBuilder server. Server và client sẽ giao tiếp liên tục để nhận về credentials đã yêu cầu (3.2). Cũng trong quá trình này, TrustBuilder dựa vào Suspicion Level để đưa ra các Credential Release Policy phù hợp. Nếu các policies của TrustBuilder đều thỏa mãn và các credentials client cung cấp đều hợp lệ, bước Negotiation đã thành công, credentials được trả về GAA-API (4).
+\item GAA-API dùng kết quả từ Trust Negotiation (4) để đánh giá nên cấp quyền truy cập hay từ chối yêu cầu truy cập service (6).
+\item (5): Analyzer lưu lại thông tin các Requester có hành vi đáng ngờ vào Suspicion Database để tiện truy xuất.
+\end{itemize}
 
 \subsection{\trustx}
-\trustx\cite{10.1109/TKDE.2004.1318565} là một kiến trúc thiết kế riêng cho kiểu tương tác P2P (Peer-to-Peer)
+\trustx\cite{10.1109/TKDE.2004.1318565} là một kiến trúc thiết kế riêng cho môi trường P2P (Peer-to-Peer). Hệ thống thiết kế dựa trên nền XML, sử dụng ngôn ngữ X-TNL để đặc tả các policies và certificates. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.8]{img/trust-x-architecture.png}
+\caption{Sơ đồ (đơn giản) mô hình \trustx}
+\end{figure}
+
+Mô hình có các đặc điểm đáng chú ý sau:
+
+\subsubsection{Certificates}
+Tương ứng với credentials của ATNAC, nhưng gồm 2 loại:
+\begin{itemize}
+\item Credentials: Mang các thuộc tính của chủ sở hữu, được công nhận bởi CA.
+\item Declarations: Mang các thông tin của chủ sỡ hữu, không cần công nhận.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{multicols}{2}
+\includegraphics[scale=.5]{img/trustx-credential.PNG}
+
+\includegraphics[scale=.5]{img/trustx-declaration.PNG}
+\end{multicols}
+\caption{Cấu trúc XML của credential (trái) và declaration (phải) certificate}
+\end{figure}
+
+\subsubsection{Các phase}
+\trustx có ba phase:
+\begin{itemize}
+\item Introduction phase: trao đổi bằng các thông điệp ngắn, quy định bởi các chính sách giới thiệu (introductory policies) của hai bên. Mục tiêu của phase là xác định các thuôc tính cần thiết cho các bước negotiate tiếp theo.
+\item Policy Exchange phase: trao đổi các chính sách tiết lộ (disclosure policies) áp dụng cho các resources liên quan. Phase này thực hiện ở Compliance Checker. Quan trọng là phase \textbf{chỉ trao đổi các policies}, \textbf{không trao đổi các certificate}. Mục tiêu của phase là xác định chuỗi các certificates phù hợp với disclosure policies của cả server và client khi release resource.
+\item Certificate Exchange phase: các bên công bố các certificate của mình, bên còn lại xác minh, tuần tự theo thứ tự đã có ở Policy Exchange phase. Resource được release khi không có vấn đề xảy ra.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.8]{img/trustx-architecture.png}
+\caption{Flowchart quá trình \trustx negotiation}
+\end{figure}
+
+Các module Trust Ticker, Sequence Prediction nhằm làm tăng tốc quá trình.
+
+\section{Tổng kết}
+
 
 \addcontentsline{toc}{section}{Tài liệu}
 \bibliographystyle{plain}
