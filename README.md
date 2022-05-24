@@ -15,5 +15,5 @@ MD5 implementation from scratch.
 ## MillerRabin
 Prime Check with Miller-Rabin algorithm.
 
-## Final
-Trust Negotiation (presentation slides and report).
+## Trust Negotiation
+Presentation slides and report.
